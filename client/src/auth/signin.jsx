@@ -1,27 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import man from '../assets/images/dashboard/profile.jpg';
-import { Container, Row, Col, Form, Input, Label, Button, NavItem, NavLink, Nav, TabContent, TabPane } from 'reactstrap'
-import { firebase_app, googleProvider, facebookProvider, githubProvider, Jwt_token } from '../data/config'
+import { Container, Row, Col, Form, Input, Label, Button, TabContent, TabPane } from 'reactstrap'
+import { Jwt_token } from '../data/config'
 import { handleResponse } from '../services/fack.backend'
-import { useAuth0 } from '@auth0/auth0-react'
-import { toast } from 'react-toastify';
-import { Facebook, GitHub } from 'react-feather'
-import firebaseImg from '../assets/images/firebase.svg'
-import jwtImg from '../assets/images/jwt.svg'
-import authImg from '../assets/images/auth0.svg'
-import { Password, SignIn, EmailAddress, RememberPassword, ForgotPassword, CreateAccount, FIREBASE, AUTH0, JWT, LoginWithJWT } from '../constant';
-import { useNavigate } from 'react-router';
+import { Password, EmailAddress, RememberPassword, ForgotPassword, CreateAccount, LoginWithJWT } from '../constant';
 import { classes } from '../data/layouts';
 
 const Logins = (props) => {
 
-  const { loginWithRedirect } = useAuth0()
   const [email, setEmail] = useState("test@gmail.com");
   const [password, setPassword] = useState("test123");
-  const [loading, setLoading] = useState(false)
-  const [selected, setSelected] = useState("firebase");
   const [togglePassword, setTogglePassword] = useState(false);
-  const history = useNavigate();
   const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
   const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
 
@@ -38,81 +27,6 @@ const Logins = (props) => {
     localStorage.setItem('Name', name);
   }, [value, name]);
 
-  const loginAuth = async (e) => {
-    e.preventDefault();
-    setLoading(true)
-
-    try {
-      await firebase_app.auth().signInWithEmailAndPassword(email, password).then(function () {
-        setValue(man);
-        setName("Emay Walter");
-        localStorage.setItem('token', Jwt_token);
-        setTimeout(() => {
-          history(`${process.env.PUBLIC_URL}/dashboard/default/${layout}`);
-        }, 200);
-      })
-    } catch (error) {
-      setTimeout(() => {
-        toast.error("Oppss.. The password is invalid or the user does not have a password.");
-      }, 200);
-    }
-  }
-
-  const googleAuth = async () => {
-
-    try {
-      firebase_app.auth().signInWithPopup(googleProvider).then(function (result) {
-        setName(result.user.displayName);
-        setValue(result.user.photoURL)
-        localStorage.setItem('token', Jwt_token);
-        setTimeout(() => {
-          history(`${process.env.PUBLIC_URL}/dashboard/default/${layout}`);
-        }, 200);
-
-      });
-    } catch (error) {
-      setTimeout(() => {
-        toast.error("Oppss.. The password is invalid or the user does not have a password.");
-      }, 200);
-    }
-  };
-
-  const facebookAuth = async () => {
-
-    try {
-      firebase_app.auth().signInWithPopup(facebookProvider).then(function (result) {
-        setValue(result.user.photoURL);
-        setName(result.user.displayName)
-        localStorage.setItem('token', Jwt_token);
-        setTimeout(() => {
-          history(`${process.env.PUBLIC_URL}/dashboard/default/${layout}`);
-        }, 200);
-      });
-    } catch (error) {
-      setTimeout(() => {
-        toast.error("Oppss.. The password is invalid or the user does not have a password.");
-      }, 200);
-    }
-  }
-
-  const githubAuth = async () => {
-
-    try {
-      firebase_app.auth().signInWithPopup(githubProvider).then(function (result) {
-        setValue(result.user.photoURL);
-        setName(result.additionalUserInfo.username)
-        localStorage.setItem('token', Jwt_token);
-        setTimeout(() => {
-          history(`${process.env.PUBLIC_URL}/dashboard/default/${layout}`);
-        }, 200);
-      });
-    } catch (error) {
-      setTimeout(() => {
-        toast.error("Oppss.. The password is invalid or the user does not have a password.");
-      }, 200);
-    }
-  }
-
   const loginWithJwt = (e) => {
     const requestOptions = {
       method: 'POST',
@@ -125,7 +39,7 @@ const Logins = (props) => {
       .then(user => {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
         setValue(man);
-        setName('Emay Walter');
+        setName('Mike Zulu');
         localStorage.setItem('token', Jwt_token);
         window.location.href = `${process.env.PUBLIC_URL}/dashboard/default/${layout}`;
         return user;
@@ -168,31 +82,11 @@ const Logins = (props) => {
                   <img className="img-fluid for-dark" src={require("../assets/images/logo/logo_dark.png")} alt="" />
                 </a>
               </div>
-              <div className="login-main login-tab">
-                <Nav className="border-tab flex-column" tabs>
-                  <NavItem>
-                    <NavLink className={selected === 'firebase' ? 'active' : ''} onClick={() => setSelected('firebase')}>
-                      <img src={firebaseImg} alt="" />
-                      <span>{FIREBASE}</span>
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink className={selected === 'jwt' ? 'active' : ''} onClick={() => setSelected('jwt')}>
-                      <img src={jwtImg} alt="" />
-                      <span>{JWT}</span>
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink className={selected === 'auth0' ? 'active' : ''} onClick={() => setSelected('auth0')}>
-                      <img src={authImg} alt="" />
-                      <span>{AUTH0}</span>
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-                <TabContent activeTab={selected} className="content-login">
-                  <TabPane className="fade show" tabId={selected === "firebase" ? "firebase" : "jwt"}>
+              <div className="login-main">
+                <TabContent className="content-login">
+                  <TabPane className="fade show">
                     <Form className="theme-form">
-                      <h4>{selected === "firebase" ? "Sign In With Firebase" : "Sign In With Jwt"}</h4>
+                      <h4>{"Sign In To HRMS"}</h4>
                       <p>{"Enter your email & password to login"}</p>
                       <div className="mb-3">
                         <Label className="col-form-label">{EmailAddress}</Label>
@@ -208,36 +102,10 @@ const Logins = (props) => {
                           <Input id="checkbox1" type="checkbox" />
                           <Label className="text-muted" for="checkbox1">{RememberPassword}</Label>
                         </div><a className="link" href="#javascript">{ForgotPassword}</a>
-                        {selected === "firebase" ?
-                          <Button color="primary" disabled={loading ? loading : loading} onClick={(e) => loginAuth(e)}>{loading ? "LOADING..." : SignIn}</Button>
-                          :
                           <Button color="primary" onClick={() => loginWithJwt(email, password)}>{LoginWithJWT}</Button>
-                        }
-                      </div>
-                      <h6 className="text-muted mt-4 or">{"Or Sign in with"}</h6>
-                      <div className="social mt-4">
-                        <div className="btn-showcase">
-                          <Button color="light" onClick={facebookAuth} >
-                            <Facebook className="txt-fb" />
-                          </Button>
-                          <Button color="light" onClick={googleAuth} >
-                            <i className="fa fa-google txt-googleplus"></i>
-                          </Button>
-                          <Button color="light" onClick={githubAuth} >
-                            <GitHub />
-                          </Button>
-                        </div>
                       </div>
                       <p className="mt-4 mb-0">{"Don't have account?"}<a className="ms-2" href="#javascript">{CreateAccount}</a></p>
                     </Form>
-                  </TabPane>
-                  <TabPane className="fade show" tabId="auth0">
-                    <div className="auth-content">
-                      <img src={require("../assets/images/auth-img.svg")} alt="" />
-                      <h4>{"Welcome to login with Auth0"}</h4>
-                      <p>{"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy"}</p>
-                      <Button color="info" onClick={loginWithRedirect}>{AUTH0}</Button>
-                    </div>
                   </TabPane>
                 </TabContent>
               </div>
