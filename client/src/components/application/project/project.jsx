@@ -14,7 +14,7 @@ const Project = () => {
   const doingProject = useSelector(content => content.Projectapp.doing_Project);
   const doneProject = useSelector(content => content.Projectapp.done_Project);
   const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
-  const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
+  const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
 
   return (
     <Fragment>

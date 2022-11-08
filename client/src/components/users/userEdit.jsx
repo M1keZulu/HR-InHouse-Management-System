@@ -9,7 +9,7 @@ const UserEdit = (props) => {
   
   const [data,setData] = useState([])
   const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
-  const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
+  const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
 
   useEffect(() => {
       axios.get(`${process.env.PUBLIC_URL}/api/user-edit-table.json`).then(res => setData(res.data))

@@ -14,7 +14,7 @@ import { classes } from '../../../data/layouts';
 
 const Productpage = (props) => {
     const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
-    const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
+    const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
     const history = useNavigate()
     const [state, setState] = useState({ nav1: null, nav2: null });
     const [rating, setRating] = useState(0)

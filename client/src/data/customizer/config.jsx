@@ -3,14 +3,14 @@ export class ConfigDB {
 		settings: {
 			layout_type: 'ltr',
 			sidebar: {
-				type: 'compact-wrapper',
+				type: 'compact-wrapper modern-type',
 			},
 			sidebar_setting: 'default-sidebar',
 		},
 		color: {
-			primary_color: '#7366ff',
-			secondary_color: '#f73164',
-			mix_background_layout: 'light-only',
+			primary_color: '#885D93',
+			secondary_color: '#F49FBC',
+			mix_background_layout: 'dark-only',
 		},
 		router_animation: 'fadeIn'
 	}

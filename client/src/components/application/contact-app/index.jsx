@@ -35,7 +35,7 @@ const Newcontact = (props) => {
   const printModalToggle = () => setprintModal(!printmodal);
   const componentRef = useRef();
   const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
-  const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
+  const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
 
   useEffect(() => {
     const unsubscribe = db.collection('contactApp').onSnapshot((snapshot) => {

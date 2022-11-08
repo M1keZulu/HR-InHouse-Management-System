@@ -12,7 +12,7 @@ const Logins = (props) => {
   const [password, setPassword] = useState("test123");
   const [togglePassword, setTogglePassword] = useState(false);
   const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
-  const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
+  const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
 
   const [value, setValue] = useState(
     localStorage.getItem('profileURL' || man)
@@ -38,10 +38,8 @@ const Logins = (props) => {
       .then(handleResponse)
       .then(user => {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
-        setValue(man);
-        setName('Mike Zulu');
         localStorage.setItem('token', Jwt_token);
-        window.location.href = `${process.env.PUBLIC_URL}/dashboard/default/${layout}`;
+        window.location.href = `${process.env.PUBLIC_URL}/dashboard/home`;
         return user;
       });
   };
@@ -78,8 +76,8 @@ const Logins = (props) => {
             <div>
               <div>
                 <a className="logo" href="index.html">
-                  <img className="img-fluid for-light" src={require("../assets/images/logo/login.png")} alt="" />
-                  <img className="img-fluid for-dark" src={require("../assets/images/logo/logo_dark.png")} alt="" />
+                  <img className="img-fluid for-light" width={120} height={34} src={require("../assets/images/logo/login.png")} alt="" />
+                  <img className="img-fluid for-dark" width={97} height={34} src={require("../assets/images/logo/logo_dark.png")} alt="" />
                 </a>
               </div>
               <div className="login-main">

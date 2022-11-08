@@ -10,7 +10,7 @@ import { classes } from '../../../data/layouts';
 
 const Checkout = (props) => {
   const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
-  const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
+  const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
   const history = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm()
   const onSubmit = data => {

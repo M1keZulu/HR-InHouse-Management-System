@@ -274,35 +274,6 @@ const Themecustomizer = (props) => {
     }
     return (
         <Fragment>
-            <div className="customizer-links">
-                <Nav className="flex-column nac-pills">
-                    <NavLink onClick={() => openCustomizer('2')}>
-                        <div className="settings" >
-                            <i className="icon-paint-bucket"></i>
-                        </div>
-                        <span>{QuickOption}</span>
-                    </NavLink>
-                    <NavLink onClick={() => openCustomizer('1')}>
-                        <div className="settings" >
-                            <i className="icon-settings"></i>
-                        </div>
-                        <span>{QuickOption}</span>
-                    </NavLink>
-                    <a className="nav-link" href="https://pixelstrap.freshdesk.com/">
-                        <div><i className="icon-support"></i></div><span>{Support}</span>
-                    </a>
-                    <a className="nav-link" href="https://docs.pixelstrap.com/cuba/document/index.html">
-                        <div><i className="icon-settings"></i></div><span>{Document}</span>
-                    </a>
-                    <a className="nav-link" href="http://admin.pixelstrap.com/cuba/theme/landing-page.html#frameworks" >
-                        <div><i className="icon-panel"></i></div><span>{CheckFeatures}</span>
-                    </a>
-                    <a className="nav-link" href="https://1.envato.market/3GVzd">
-                        <div><i className="icon-shopping-cart-full"></i></div><span>{BuyNow}</span>
-                    </a>
-                </Nav>
-            </div>
-
             <div className="customizer-contain">
                 <div className="tab-content" id="c-pills-tabContent">
                     <div className="customizer-header">

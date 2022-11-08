@@ -19,16 +19,14 @@ const Routers = () => {
 
         const abortController = new AbortController();
         const [currentUser, setCurrentUser] = useState(false);
-        const [authenticated, setAuthenticated] = useState(false)
         const jwt_token = localStorage.getItem('token');
         const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
-        const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
+        const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
 
         useEffect(() => {
                 const requestOptions = { method: 'GET', headers: authHeader() };
                 fetch('/users', requestOptions).then(handleResponse)
                 firebase_app.auth().onAuthStateChanged(setCurrentUser);
-                setAuthenticated(JSON.parse(localStorage.getItem("authenticated")))
                 console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
                 console.disableYellowBox = true;
                 return function cleanup() {
@@ -43,17 +41,16 @@ const Routers = () => {
                                 <Suspense fallback={<Loader />}>
                                         <Routes>
                                                 <Route path={'/'} element={<PrivateRoute />}>
-                                                        {currentUser !== null || authenticated || jwt_token ?
+                                                        {jwt_token ?
                                                                 <>
                                                                         <Route exact
                                                                                 path={`${process.env.PUBLIC_URL}` }
-                                                                                element={<Navigate to={`${process.env.PUBLIC_URL}/dashboard/default/${layout}`} />}
+                                                                                element={<Navigate to={`${process.env.PUBLIC_URL}/dashboard/home`} />}
                                                                         />
                                                                 </> : ''}
                                                         <Route path={`/*`} element={<LayoutRoutes />} />
                                                 </Route>
-                                                <Route path={`${process.env.PUBLIC_URL}/callback`} render={() => <Callback />} />
-                                                <Route exact path={`${process.env.PUBLIC_URL}/login`} element={<Signin />} />
+                                               
                                                 {authRoutes.map(({ path, Component }, i) => (
                                                         <Route path={path} element={Component} key={i} />
                                                 ))}

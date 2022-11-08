@@ -29,7 +29,7 @@ const Chat = () => {
     const [menuToggle, setMenuToggle] = useState(false);
     const [activeTab, setActiveTab] = useState('1');
     const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
-    const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
+    const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
 
     var images = require.context('../../../assets/images', true);
 

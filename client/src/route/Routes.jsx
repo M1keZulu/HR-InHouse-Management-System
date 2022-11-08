@@ -2,6 +2,9 @@
 import Default from '../components/dashboard/default'
 import Ecommerce from '../components/dashboard/ecommerce'
 
+import Home from '../components/dashboard/home'
+
+
 // widgets
 import GeneralWidget from '../components/widgets/general'
 import ChartsWidget from '../components/widgets/charts'
@@ -203,6 +206,10 @@ import LeafletMapContain from '../components/map/LeafletMap'
 
 
 export const routes = [
+        //Custom Components
+        { path: `${process.env.PUBLIC_URL}/dashboard/home`, Component: <Home /> },
+
+
         { path: `${process.env.PUBLIC_URL}/dashboard/default/:layout/`, Component: <Default /> },
         { path: `${process.env.PUBLIC_URL}/dashboard/ecommerce/:layout/`, Component: <Ecommerce /> },
 

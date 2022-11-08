@@ -30,7 +30,7 @@ const Email = (props) => {
   const [selectedFav, setSelectedFav] = useState(false);
   const [singleMailRecord, setSingleMailRecord] = useState({});
   const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
-  const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
+  const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
   
   const toggle = () => setOpen(!dropdownOpen);
 

@@ -30,7 +30,7 @@ const Product = (props) => {
   const filters = useSelector(content => content.filters);
   const products = getVisibleproducts(data, filters)
   const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
-  const layout = localStorage.getItem('layout') || Object.keys(defaultLayoutObj).pop();
+  const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
 
   useEffect(() => {
     dispatch(watchfetchProducts())

@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import { routes } from './Routes';
 import AppLayout from '../components/layout';
 
-
 const LayoutRoutes = () => {
 
   return (
@@ -11,7 +10,7 @@ const LayoutRoutes = () => {
       <Routes>
         {routes.map(({ path, Component }, i) => (
           <Route element={<AppLayout />} key={i}>
-            <Route path={path} element={Component} />
+            <Route path={path} element={Component} /> 
           </Route>
         ))}
       </Routes>
