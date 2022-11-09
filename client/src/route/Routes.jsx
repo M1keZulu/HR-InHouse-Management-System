@@ -2,7 +2,10 @@
 import Default from '../components/dashboard/default'
 import Ecommerce from '../components/dashboard/ecommerce'
 
+//Custom Components
 import Home from '../components/dashboard/home'
+import AddUser from "../components/dashboard/addUser"
+import ViewUsers from '../components/dashboard/viewUsers'
 
 
 // widgets
@@ -208,7 +211,8 @@ import LeafletMapContain from '../components/map/LeafletMap'
 export const routes = [
         //Custom Components
         { path: `${process.env.PUBLIC_URL}/dashboard/home`, Component: <Home /> },
-
+        { path: `${process.env.PUBLIC_URL}/dashboard/addUser/:layout`, Component: <AddUser /> },
+        { path: `${process.env.PUBLIC_URL}/dashboard/viewUsers/:layout`, Component: <ViewUsers /> },    
 
         { path: `${process.env.PUBLIC_URL}/dashboard/default/:layout/`, Component: <Default /> },
         { path: `${process.env.PUBLIC_URL}/dashboard/ecommerce/:layout/`, Component: <Ecommerce /> },

@@ -5,11 +5,13 @@ import { Jwt_token } from '../data/config'
 import { handleResponse } from '../services/fack.backend'
 import { Password, EmailAddress, RememberPassword, ForgotPassword, CreateAccount, LoginWithJWT } from '../constant';
 import { classes } from '../data/layouts';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const Logins = (props) => {
 
-  const [email, setEmail] = useState("test@gmail.com");
-  const [password, setPassword] = useState("test123");
+  const [email, setEmail] = useState("arhamnasir@gmail.com");
+  const [password, setPassword] = useState("arhamnasir");
   const [togglePassword, setTogglePassword] = useState(false);
   const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
   const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
@@ -28,20 +30,31 @@ const Logins = (props) => {
   }, [value, name]);
 
   const loginWithJwt = (e) => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: ({ email, password })
-    };
+    // const requestOptions = {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: ({ email, password })
+    // };
 
-    return fetch('/users/authenticate', requestOptions)
-      .then(handleResponse)
-      .then(user => {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem('token', Jwt_token);
+    axios.post('http://127.0.0.1:8000/user/login', {email, password}).then((response) => {
+      if(response.data.error){
+        toast.error(response.data.error);
+      }
+      else{
+        toast.success("Login Success"); 
         window.location.href = `${process.env.PUBLIC_URL}/dashboard/home`;
-        return user;
-      });
+        localStorage.setItem('token', response.data.token);
+      }
+    });
+
+    // return fetch('/users/authenticate', requestOptions)
+    //   .then(handleResponse)
+    //   .then(user => {
+    //     // store user details and jwt token in local storage to keep user logged in between page refreshes
+    //     localStorage.setItem('token', Jwt_token);
+    //     window.location.href = `${process.env.PUBLIC_URL}/dashboard/home`;
+    //     return user;
+    //   });
   };
 
   // const loginWithJwt = (email, password) => {

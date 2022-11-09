@@ -13,8 +13,6 @@ import Signin from '../auth/signin';
 import PrivateRoute from './PrivateRoute';
 import { classes } from '../data/layouts';
 
-// setup fake backend
-configureFakeBackend();
 const Routers = () => {
 
         const abortController = new AbortController();

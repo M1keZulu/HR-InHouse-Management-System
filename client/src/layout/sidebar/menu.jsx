@@ -5,15 +5,9 @@ export const MENUITEMS = [
         menucontent: "Add/Remove and Manage User Previleges",
         Items: [
             {
-                title: 'Dashboard', icon: Home, type: 'sub', badge: "badge badge-success", badgetxt: "2", active: false, children: [
-                    { path: `${process.env.PUBLIC_URL}/dashboard/default`, title: 'Default', type: 'link' },
-                    { path: `${process.env.PUBLIC_URL}/dashboard/ecommerce`, title: 'Ecommerce', type: 'link' },
-                ]
-            },
-            {
-                title: 'Widgets', icon: Airplay, type: 'sub', active: false, children: [
-                    { path: `${process.env.PUBLIC_URL}/widgets/general`, title: 'General', type: 'link' },
-                    { path: `${process.env.PUBLIC_URL}/widgets/chart`, title: 'Chart', type: 'link' },
+                title: 'Users', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
+                    { path: `${process.env.PUBLIC_URL}/dashboard/addUser`, type: 'link', title: 'Add User' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/viewUsers`, type: 'link', title: 'View Users' },
                 ]
             },
         ]

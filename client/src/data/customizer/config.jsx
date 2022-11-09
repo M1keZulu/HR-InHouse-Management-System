@@ -10,7 +10,7 @@ export class ConfigDB {
 		color: {
 			primary_color: '#885D93',
 			secondary_color: '#F49FBC',
-			mix_background_layout: 'dark-only',
+			mix_background_layout: 'light',
 		},
 		router_animation: 'fadeIn'
 	}

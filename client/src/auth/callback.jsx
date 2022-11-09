@@ -13,7 +13,7 @@ const Callback = () => {
     if (user) {
       localStorage.setItem("auth0_profile", JSON.stringify(user))
       localStorage.setItem("authenticated", true)
-      window.location.href = `${process.env.PUBLIC_URL}/dashboard/default/${layout}`;
+      window.location.href = `${process.env.PUBLIC_URL}/dashboard/home`;
     }
   })
 
