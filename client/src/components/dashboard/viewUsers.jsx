@@ -99,7 +99,14 @@ const ViewUsers = () => {
       {headers : 
         {accessToken: localStorage.getItem('token')}, })
       .then((response) => {
-            toast.success("Successfully Updated")
+            toast.success("Successfully Updated");
+            const temp = data.map((item) => {
+              if (item.id === modalData.id) {
+                return modalData;
+              }
+              return item;
+            });
+            setData(temp);
             setModal(false);
       }).catch((error) => {
             toast.error("Error Updating User");
