@@ -8,8 +8,6 @@ app.use(cors({
     origin: ['*', 'http://localhost:3001'],
 }));
 
-const db = require('./models');
-
 const userRouter = require('./routes/users');
 app.use("/user", userRouter);
 

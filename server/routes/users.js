@@ -1,66 +1,76 @@
 const express = require("express");
 const router = express.Router();
-const { users } = require("../models");
 const { validateToken } = require("../middlewares/AuthMiddleware");
+
+let connection = require("../database");
 
 const {sign} = require('jsonwebtoken');
 
 router.post("/", validateToken, async (req, res) => {
     console.log(req.body);
-    const user = await users.create(req.body.formData)
-    .then()
-    .catch((err) => {
-        res.status(400).json({auth: true, error: err});
+    let sql = `INSERT INTO users (username, password, email) VALUES ('${req.body.formData.username}', '${req.body.formData.password}', '${req.body.formData.email}')`;
+    connection
+    .query
+    (sql, function (err, result) {
+        if (err) return res.status(400).json({auth: true, error: err});
+        console.log("1 record inserted");
+        return res.json({auth: true, message: "User created"});
     });
-    res.json(user);
 });
 
 router.post("/deleteUsers", validateToken, async (req, res) => {
     console.log(req.body);
-    const user = await users.destroy({
-        where: {
-            id: req.body.id
-        }
-    })
-    .then()
-    .catch((err) => {
-        res.status(400).json({auth: true, error: "Error deleting user"});
+    let sql = "DELETE FROM users WHERE id IN (" + req.body.formData + ")";
+    connection
+    .query
+    (sql, function (err, result) {
+        if (err) return res.status(400).json({auth: true, error: "Error Deleting Users"});
+        console.log("Number of records deleted: " + result.affectedRows);
+        return res.json({auth: true, message: "Users deleted"});
     });
-    res.json(user);
 });
 
+
 router.get("/getUsers", validateToken, async (req, res) => {
-    const user = await users.findAll();
-    res.json(user);
+    console.log(req.body);
+    let sql = "SELECT * FROM users";
+    connection
+    .query
+    (sql, function (err, result) {
+        if (err) return res.status(400).json({auth: true, error: "Error Getting Users"});
+        console.log("Number of records deleted: " + result.affectedRows);
+        return res.json(result);
+    });
 });
 
 router.post("/updateUser", validateToken, async (req, res) => {
     console.log(req.body);
-    const user = await users.update(req.body.modalData, {
-        where: {
-            id: req.body.modalData.id
-        }
-    })
-    .then()
-    .catch((err) => {
-        res.status(400).json({auth: true, error: "Error updating user"});
+    let sql = "UPDATE users SET name = '" + req.body.formData.name + "', email = '" + req.body.formData.email + "', password = '" + req.body.formData.password + "' WHERE id = " + req.body.formData.id;
+    connection
+    .query
+    (sql, function (err, result) {
+        if (err) return res.status(400).json({auth: true, error: "Error Updating User"});
+        console.log("Number of records deleted: " + result.affectedRows);
+        return res.json({auth: true, message: "User updated"});
     });
-    res.json(user);
 });
 
 router.post("/login", async (req, res) => {
-    const {email, password} = req.body;
-    const user = await users.findOne({where: {email: email}});
-    if (!user) {
-        res.json({auth: false, error: "User doesn't exist"});
-    } else {
-        if (password == user.password) {
-            const token = sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: "1h"});
-            res.json({auth: true, token: token});
+    console.log(req.body);
+    let sql = "SELECT * FROM users WHERE email = '" + req.body.email + "' AND password = '" + req.body.password + "'";
+    connection
+    .query
+    (sql, function (err, result) {
+        if (err) return res.status(400).json({auth: false, error: "Error Logging In"});
+        console.log("Number of records deleted: " + result.affectedRows);
+        if (result.length > 0) {
+            const accessToken = sign({id: result[0].id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+            return res.json({auth: true, token: accessToken, user: result[0]});
         } else {
-            res.status(401).json({auth: false, error: 'Wrong password'});
+            return res.status(401).json({auth: false, message: "Incorrect email or password"});
         }
-    }
+    });
 });
+
 
 module.exports = router;
