@@ -1,7 +1,7 @@
 const {verify} = require('jsonwebtoken');
 
 const validateToken = (req, res, next) => {
-    const accessToken = req.header('accessToken');
+    const accessToken = req.header('x-access-token');
 
     if (!accessToken) return res.status(401).json({auth: false, error: 'Unauthorized'});
 

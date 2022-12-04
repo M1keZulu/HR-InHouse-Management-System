@@ -5,11 +5,13 @@ import { useNavigate } from 'react-router-dom'
 import { firebase_app } from '../../data/config'
 import { useAuth0 } from '@auth0/auth0-react'
 import Bookmark from "../../layout/bookmark"
+import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom'
 import { useTranslation } from "react-i18next";
 import { English, Deutsch, Español, Français, Português, 简体中文, Notification, DeliveryProcessing, OrderComplete, TicketsGenerated, DeliveryComplete, CheckAllNotification, ViewAll, MessageBox, EricaHughes, KoriThomas, Admin, Account, Inbox, Taskboard, LogOut, AinChavez, CheckOut, ShopingBag, OrderTotal, GoToyourcart } from '../../constant'
 import { InputGroup, InputGroupText } from 'reactstrap';
 import { classes } from '../../data/layouts';
+import axios from 'axios';
 
 const Rightbar = () => {
 
@@ -24,6 +26,7 @@ const Rightbar = () => {
   const [chatDropDown, setChatDropDown] = useState(false)
   const { i18n } = useTranslation();
   const [selected, setSelected] = useState('en');
+  const [imgSrc, setImg] = useState('');
 
   const changeLanguage = lng => {
     i18n.changeLanguage(lng);
@@ -36,6 +39,20 @@ const Rightbar = () => {
   const auth0_profile = JSON.parse(localStorage.getItem("auth0_profile"))
 
   useEffect(() => {
+      axios
+      .get('http://127.0.0.1:8000/user/getLoggedUser',  
+      {headers : 
+        {'x-access-token': localStorage.getItem('token')}, })
+      .then((response) => {
+        if(response.data.status==false){
+          toast.error(response.data.message);
+        }
+        else{
+          setName(response.data.user.first_name + ' ' + response.data.user.last_name);
+          setImg(response.data.user.photo);
+        }
+    });
+
     setProfile(localStorage.getItem('profileURL') || man);
     setName(localStorage.getItem('Name'))
     if (localStorage.getItem("layout_version") === "dark-only") {
@@ -140,15 +157,12 @@ const Rightbar = () => {
           <li className="maximize"><a className="text-dark" href="#javascript" onClick={goFull}><Maximize /></a></li>
           <li className="profile-nav onhover-dropdown p-0">
             <div className="media profile-media">
-              <img className="b-r-10" src={"/"} alt="" />
-              <div className="media-body"><span>{"Mike Zulu"}</span>
+              <img className="b-r-10" src={'http://127.0.0.1:8000/' + imgSrc} alt="" />
+              <div className="media-body"><span>{name}</span>
                 <p className="mb-0 font-roboto">{Admin} <i className="middle fa fa-angle-down"></i></p>
               </div>
             </div>
             <ul className="profile-dropdown onhover-show-div">
-              <li onClick={() => UserMenuRedirect(`${process.env.PUBLIC_URL}/app/users/userProfile/${layout}`)}><User /><span>{Account} </span></li>
-              <li onClick={() => UserMenuRedirect(`${process.env.PUBLIC_URL}/app/email-app/${layout}`)}><Mail /><span>{Inbox}</span></li>
-              <li onClick={() => UserMenuRedirect(`${process.env.PUBLIC_URL}/app/todo-app/todo/${layout}`)}><FileText /><span>{Taskboard}</span></li>
               <li onClick={authenticated ? Logout_From_Auth0 : Logout_From_Firebase}><LogIn /><span>{LogOut}</span></li>
             </ul>
           </li>

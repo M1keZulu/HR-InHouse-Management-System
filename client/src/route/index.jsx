@@ -3,7 +3,7 @@ import React from 'react';
 import { Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { firebase_app } from '../data/config';
-
+import axios from 'axios';
 import { configureFakeBackend, authHeader, handleResponse } from '../services/fack.backend';
 import Callback from '../auth/callback';
 import Loader from '../layout/loader';
@@ -20,6 +20,7 @@ const Routers = () => {
         const jwt_token = localStorage.getItem('token');
         const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
         const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
+        const [isAuth, setIsAuth] = useState(false);
 
         useEffect(() => {
                 const requestOptions = { method: 'GET', headers: authHeader() };
@@ -27,6 +28,16 @@ const Routers = () => {
                 firebase_app.auth().onAuthStateChanged(setCurrentUser);
                 console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
                 console.disableYellowBox = true;
+                axios.get('http://127.0.0.1:8000/user/getAuth', { headers: { 'x-access-token': jwt_token } })
+                        .then((response) => {
+                                if(response.data.status===true){
+                                        setIsAuth(true);
+                                }
+                        })
+                        .catch((error) => {
+                                console.log(error);
+                        });
+                        
                 return function cleanup() {
                         abortController.abort();
                 }
@@ -39,7 +50,7 @@ const Routers = () => {
                                 <Suspense fallback={<Loader />}>
                                         <Routes>
                                                 <Route path={'/'} element={<PrivateRoute />}>
-                                                        {jwt_token ?
+                                                        {isAuth ?
                                                                 <>
                                                                         <Route exact
                                                                                 path={`${process.env.PUBLIC_URL}` }

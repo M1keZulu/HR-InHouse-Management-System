@@ -37,11 +37,11 @@ const Logins = (props) => {
     // };
 
     axios.post('http://127.0.0.1:8000/user/login', {email, password}).then((response) => {
-      if(response.data.error){
-        toast.error(response.data.error);
+      if(response.data.status==false){
+        toast.error(response.data.message);
       }
       else{
-        toast.success("Login Success"); 
+        toast.success(response.data.message); 
         window.location.href = `${process.env.PUBLIC_URL}/dashboard/home`;
         localStorage.setItem('token', response.data.token);
       }

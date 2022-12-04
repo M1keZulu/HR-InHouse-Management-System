@@ -6,7 +6,7 @@ import {Container,Row,Col,Card,CardHeader,CardBody,CardFooter,Form,FormGroup,Lab
 import { DefaultFormLayout,EmailAddress,Email,Password,Username,Website,BillingInformation,CompanyInformation,InlineForm,InlineFormWithLabel,InlineFormWithoutLabel,HorizontalFormLayout,MegaForm,Submit,Cancel,AccountInformation,Option,Login,ContactNumber,CompanyName,YourName,Checkboxes,Radios,Disabled } from "../../constant";
 
 
-const AddUser = () => { 
+const AddCompany = () => { 
   const initialFormData = Object.freeze({
     first_name: '',
     last_name: '',
@@ -33,16 +33,11 @@ const AddUser = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = new FormData();
-    data.append('file', document.getElementById('photo').files[0]);
-    for (var key in formData) {
-      data.append(key, formData[key]);
-    }
     axios
-    .post('http://127.0.0.1:8000/user/addUser', 
-    data,
+    .post('http://127.0.0.1:8000/companies/addCompany', 
+    formData,
     {headers : 
-      {'x-access-token': localStorage.getItem('token'), 'Content-Type': 'multipart/form-data'} })
+      {'x-access-token': localStorage.getItem('token')} })
     .then((response) => {
       if(response.data.status===true){
         toast.success(response.data.message);
@@ -55,7 +50,7 @@ const AddUser = () => {
 
   return (
     <Fragment>
-      <Breadcrumb parent="Dashboard" title="Add Candidate"/>
+      <Breadcrumb parent="Dashboard" title="Add Company"/>
       <Container fluid={true}>
         <Row>
           <Col sm="12" xl="6">
@@ -63,53 +58,35 @@ const AddUser = () => {
               <Col sm="12">
                 <Card>
                   <CardHeader>
-                    <h5>Enter Candidate Details</h5>
+                    <h5>Enter Company Details</h5>
                   </CardHeader>
                   <CardBody>
                     <Form className="theme-form">
                       <Row>
                         <Col>
                           <FormGroup>
-                            <Label className="col-form-label pt-0" for="first_name">First Name</Label>
-                            <Input className="form-control" id="first_name" type="text" name="first_name" onChange={handleChange} />
+                            <Label className="col-form-label pt-0" for="first_name">Company Name</Label>
+                            <Input className="form-control" id="name" type="text" name="name" onChange={handleChange} />
                           </FormGroup>
                         </Col>
                         <Col>
                           <FormGroup>
-                            <Label className="col-form-label pt-0" for="last_name">Last Name</Label>
-                            <Input className="form-control" id="last_name" type="text" name="last_name" onChange={handleChange} />
+                            <Label className="col-form-label pt-0" for="last_name">Company Location</Label>
+                            <Input className="form-control" id="location" type="text" name="location" onChange={handleChange} />
                           </FormGroup>
                         </Col>
                       </Row>
                       <Row>
                         <Col>
                           <FormGroup>
-                            <Label className="col-form-label pt-0" for="email">Email</Label>
+                            <Label className="col-form-label pt-0" for="email">Company Email</Label>
                             <Input className="form-control" id="email" type="email" name="email" onChange={handleChange} />
                           </FormGroup>
                         </Col>
-                        <FormGroup>
-                            <Label className="col-form-label pt-0" for="last_name">Designation</Label>
-                            <Input className="form-control" id="designation" type="text" name="designation" onChange={handleChange} />
-                          </FormGroup>
                         <Col>
                           <FormGroup>
-                            <Label className="col-form-label pt-0" for="phone">Phone</Label>
+                            <Label className="col-form-label pt-0" for="phone">Company Phone</Label>
                             <Input className="form-control" id="phone" type="text" name="phone" onChange={handleChange} />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                      <Col>
-                          <FormGroup>
-                            <Label className="col-form-label pt-0" for="password">Password</Label>
-                            <Input className="form-control" id="password" type="password" name="password" onChange={handleChange} />
-                          </FormGroup>
-                        </Col>
-                        <Col>
-                          <FormGroup>
-                            <Label className="col-form-label pt-0" for="photo">Photo</Label>
-                            <Input className="form-control" id="photo" type="file" name="photo" />
                           </FormGroup>
                         </Col>
                       </Row>
@@ -128,4 +105,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default AddCompany;

@@ -6,7 +6,7 @@ import {Container,Row,Col,Card,CardHeader,CardBody,CardFooter,Form,FormGroup,Lab
 import { DefaultFormLayout,EmailAddress,Email,Password,Username,Website,BillingInformation,CompanyInformation,InlineForm,InlineFormWithLabel,InlineFormWithoutLabel,HorizontalFormLayout,MegaForm,Submit,Cancel,AccountInformation,Option,Login,ContactNumber,CompanyName,YourName,Checkboxes,Radios,Disabled } from "../../constant";
 
 
-const AddUser = () => { 
+const AddCandidate = () => { 
   const initialFormData = Object.freeze({
     first_name: '',
     last_name: '',
@@ -24,6 +24,26 @@ const AddUser = () => {
   });
   const [formData, updateFormData] = React.useState(initialFormData);
 
+  const uploadPhoto = (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('file', document.getElementById('photo').files[0]);
+    axios
+      .post('http://127.0.0.1:8000/candidates/uploadPhoto', data)
+      .then((response) => {
+        if(response.status=true){
+          toast.success("Photo Uploaded");
+          updateFormData({
+            ...formData,
+            ['photo']: /upload/ + response.data,
+          });
+        }
+        else{
+          toast.error("Photo Upload Failed");
+        }
+      });
+  }
+
   const handleChange = (e) => {
     updateFormData({
       ...formData,
@@ -39,7 +59,7 @@ const AddUser = () => {
       data.append(key, formData[key]);
     }
     axios
-    .post('http://127.0.0.1:8000/user/addUser', 
+    .post('http://127.0.0.1:8000/candidates/addCandidate', 
     data,
     {headers : 
       {'x-access-token': localStorage.getItem('token'), 'Content-Type': 'multipart/form-data'} })
@@ -88,10 +108,6 @@ const AddUser = () => {
                             <Input className="form-control" id="email" type="email" name="email" onChange={handleChange} />
                           </FormGroup>
                         </Col>
-                        <FormGroup>
-                            <Label className="col-form-label pt-0" for="last_name">Designation</Label>
-                            <Input className="form-control" id="designation" type="text" name="designation" onChange={handleChange} />
-                          </FormGroup>
                         <Col>
                           <FormGroup>
                             <Label className="col-form-label pt-0" for="phone">Phone</Label>
@@ -100,10 +116,52 @@ const AddUser = () => {
                         </Col>
                       </Row>
                       <Row>
-                      <Col>
+                        <Col>
                           <FormGroup>
-                            <Label className="col-form-label pt-0" for="password">Password</Label>
-                            <Input className="form-control" id="password" type="password" name="password" onChange={handleChange} />
+                            <Label className="col-form-label pt-0" for="location">Location</Label>
+                            <Input className="form-control" id="location" type="text" name="location" onChange={handleChange} />
+                          </FormGroup>
+                        </Col>
+                        <Col>
+                          <FormGroup>
+                            <Label className="col-form-label pt-0" for="gender">Gender</Label>
+                            <Input className="form-control" id="location" type="text" name="gender" onChange={handleChange} />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <FormGroup>
+                            <Label className="col-form-label pt-0" for="dob">Date of Birth</Label>
+                            <Input className="form-control" id="dob" type="date" name="dob" onChange={handleChange} />
+                          </FormGroup>
+                        </Col>
+                        <Col>
+                          <FormGroup>
+                            <Label className="col-form-label pt-0" for="mother_language">Mother Language</Label>
+                            <Input className="form-control" id="mother_language" type="text" name="mother_language" onChange={handleChange} />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <FormGroup>
+                            <Label className="col-form-label pt-0" for="job_type">Job Type</Label>
+                            <Input className="form-control" id="job_type" type="text" name="job_type" onChange={handleChange} />
+                          </FormGroup>
+                        </Col>
+                        <Col>
+                          <FormGroup>
+                            <Label className="col-form-label pt-0" for="description">Description</Label>
+                            <Input className="form-control" id="description" type="text" name="description" onChange={handleChange} />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <FormGroup>
+                            <Label className="col-form-label pt-0" for="source">Source</Label>
+                            <Input className="form-control" id="source" type="text" name="source" onChange={handleChange} />
                           </FormGroup>
                         </Col>
                         <Col>
@@ -128,4 +186,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default AddCandidate;

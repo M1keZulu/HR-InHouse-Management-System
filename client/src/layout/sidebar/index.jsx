@@ -1,13 +1,18 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux'
-import { MENUITEMS } from './menu';
 import { ArrowRight, ArrowLeft, Grid } from 'react-feather';
 import { Link } from 'react-router-dom'
 import configDB from '../../data/customizer/config';
 import { DefaultLayout } from '../theme-customizer';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import { Home, Airplay, Box, FolderPlus, Command, Cloud, FileText, Server, BarChart, Users, Layers, ShoppingBag, List, Mail, MessageCircle, GitPullRequest, Monitor, Heart, Clock, Zap, CheckSquare, Calendar, Image, Film, HelpCircle, Radio, Map, Edit, Sunrise, Package } from 'react-feather'
+
 
 const Sidebar = () => {
+
+  const [MENUITEMS, setMENU] = useState([]);
+
   const id = window.location.pathname.split('/').pop()
   const defaultLayout = Object.keys(DefaultLayout);
   const layout = id ? id : defaultLayout
@@ -26,9 +31,136 @@ const Sidebar = () => {
         document.querySelector(".sidebar-main").className = "sidebar-main"
     }
   }
+  //User Access Control
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/permissions/getUserPermissions', {
+      headers: {
+        'x-access-token': localStorage.getItem('token')
+      }
+    })
+      .then(response => {
+        if (response.data.status === true){
+          if(response.data.data[0].name=='admin_permission'){
+              setMENU([
+                {
+                    menutitle: "Candidate Management",
+                    menucontent: "Add/Remove and Manage Candidates",
+                    Items: [
+                        {
+                            title: 'Candidates', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
+                                { path: `${process.env.PUBLIC_URL}/dashboard/addCandidate`, type: 'link', title: 'Add Candidate' },
+                                { path: `${process.env.PUBLIC_URL}/dashboard/viewCandidates`, type: 'link', title: 'View Candidates' },
+                            ]
+                        },
+                    ]
+                },
+                {
+                    menutitle: "Company And Job Management",
+                    menucontent: "Add/Remove and Manage Companies/Jobs",
+                    Items: [
+                        {
+                            title: 'Companies', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
+                                { path: `${process.env.PUBLIC_URL}/dashboard/addCompany`, type: 'link', title: 'Add Company' },
+                                { path: `${process.env.PUBLIC_URL}/dashboard/viewCompanies`, type: 'link', title: 'View Companies' },
+                            ]
+                        },
+                        {
+                            title: 'Jobs', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
+                                { path: `${process.env.PUBLIC_URL}/dashboard/addJob`, type: 'link', title: 'Add Job' },
+                                { path: `${process.env.PUBLIC_URL}/dashboard/viewJobs`, type: 'link', title: 'View Jobs' },
+                            ]
+                        },
+                    ]
+                },
+                {
+                  menutitle: "Settings",
+                  menucontent: "Add/Remove User/Previleges and Manage Settings",
+                  Items: [
+                      {
+                          title: 'Users', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
+                              { path: `${process.env.PUBLIC_URL}/dashboard/addUser`, type: 'link', title: 'Add User' },
+                              { path: `${process.env.PUBLIC_URL}/dashboard/viewPermissions`, type: 'link', title: 'View Users/Permissions' },
+                          ]
+                      }
+                  ]
+              }
+            ]);
+          }
+          else if(response.data.data[0].name=='company_permission'){
+              setMENU([
+                {
+                    menutitle: "Candidate Management",
+                    menucontent: "Add/Remove and Manage Candidates",
+                    Items: [
+                        {
+                            title: 'Candidates', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
+                                { path: `${process.env.PUBLIC_URL}/dashboard/addCandidate`, type: 'link', title: 'Add Candidate' },
+                                { path: `${process.env.PUBLIC_URL}/dashboard/viewCandidates`, type: 'link', title: 'View Candidates' },
+                            ]
+                        },
+                    ]
+                },
+                {
+                    menutitle: "Company And Job Management",
+                    menucontent: "Add/Remove and Manage Companies/Jobs",
+                    Items: [
+                        {
+                            title: 'Jobs', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
+                                { path: `${process.env.PUBLIC_URL}/dashboard/addJob`, type: 'link', title: 'Add Job' },
+                                { path: `${process.env.PUBLIC_URL}/dashboard/viewJobs`, type: 'link', title: 'View Jobs' },
+                            ]
+                        },
+                    ]
+                },
+            ]);
+          }
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }, [])
+
+      
+    
+    // if(true){
+    //   setMENU([
+    //     {
+    //         menutitle: "Candidate Management",
+    //         menucontent: "Add/Remove and Manage Candidates",
+    //         Items: [
+    //             {
+    //                 title: 'Candidates', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
+    //                     { path: `${process.env.PUBLIC_URL}/dashboard/addCandidate`, type: 'link', title: 'Add Candidate' },
+    //                     { path: `${process.env.PUBLIC_URL}/dashboard/viewCandidates`, type: 'link', title: 'View Candidates' },
+    //                 ]
+    //             },
+    //         ]
+    //     },
+    //     {
+    //         menutitle: "Company And Job Management",
+    //         menucontent: "Add/Remove and Manage Companies/Jobs",
+    //         Items: [
+    //             {
+    //                 title: 'Companies', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
+    //                     { path: `${process.env.PUBLIC_URL}/dashboard/addCompany`, type: 'link', title: 'Add Company' },
+    //                     { path: `${process.env.PUBLIC_URL}/dashboard/viewCompanies`, type: 'link', title: 'View Companies' },
+    //                 ]
+    //             },
+    //             {
+    //                 title: 'Jobs', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
+    //                     { path: `${process.env.PUBLIC_URL}/dashboard/addJob`, type: 'link', title: 'Add Job' },
+    //                     { path: `${process.env.PUBLIC_URL}/dashboard/viewJobs`, type: 'link', title: 'View Jobs' },
+    //                 ]
+    //             },
+    //         ]
+    //     }
+    // ]);
+
+    // }
+
   useEffect(() => {
     document.querySelector(".left-arrow").classList.add("d-none")
-
     window.addEventListener('resize', handleResize)
     handleResize();
     const currentUrl = window.location.pathname;

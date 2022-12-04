@@ -4,8 +4,16 @@ import Ecommerce from '../components/dashboard/ecommerce'
 
 //Custom Components
 import Home from '../components/dashboard/home'
-import AddUser from "../components/dashboard/addUser"
-import ViewUsers from '../components/dashboard/viewUsers'
+import AddCandidate from "../components/dashboard/addCandidate"
+import ViewCandidates from '../components/dashboard/viewCandidates'
+import CandidateProfile from '../components/dashboard/candidateProfile'
+import AddCompany from '../components/dashboard/addCompany'
+import ViewCompanies from '../components/dashboard/viewCompanies'
+import AddJob from '../components/dashboard/addJob'
+import ViewJobs from '../components/dashboard/viewJobs'
+import JobProfile from '../components/dashboard/jobProfile'
+import AddUser from '../components/dashboard/addUser'
+import ViewPermissions from '../components/dashboard/viewPermissions'
 
 
 // widgets
@@ -211,8 +219,16 @@ import LeafletMapContain from '../components/map/LeafletMap'
 export const routes = [
         //Custom Components
         { path: `${process.env.PUBLIC_URL}/dashboard/home`, Component: <Home /> },
+        { path: `${process.env.PUBLIC_URL}/dashboard/addCandidate/:layout`, Component: <AddCandidate /> },
+        { path: `${process.env.PUBLIC_URL}/dashboard/viewCandidates/:layout`, Component: <ViewCandidates /> }, 
+        { path: `${process.env.PUBLIC_URL}/dashboard/candidateProfile/:id/:layout`, Component: <CandidateProfile /> },   
+        { path: `${process.env.PUBLIC_URL}/dashboard/addCompany/:layout`, Component: <AddCompany /> },
+        { path: `${process.env.PUBLIC_URL}/dashboard/viewCompanies/:layout`, Component: <ViewCompanies /> },
+        { path: `${process.env.PUBLIC_URL}/dashboard/addJob/:layout`, Component: <AddJob /> },
+        { path: `${process.env.PUBLIC_URL}/dashboard/viewJobs/:layout`, Component: <ViewJobs /> },
+        { path: `${process.env.PUBLIC_URL}/dashboard/jobProfile/:id/:layout`, Component: <JobProfile /> },
         { path: `${process.env.PUBLIC_URL}/dashboard/addUser/:layout`, Component: <AddUser /> },
-        { path: `${process.env.PUBLIC_URL}/dashboard/viewUsers/:layout`, Component: <ViewUsers /> },    
+        { path: `${process.env.PUBLIC_URL}/dashboard/viewPermissions/:layout`, Component: <ViewPermissions /> },
 
         { path: `${process.env.PUBLIC_URL}/dashboard/default/:layout/`, Component: <Default /> },
         { path: `${process.env.PUBLIC_URL}/dashboard/ecommerce/:layout/`, Component: <Ecommerce /> },
