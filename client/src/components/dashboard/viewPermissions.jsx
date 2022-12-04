@@ -68,7 +68,6 @@ const ViewPermissions = () => {
     {headers : 
       {'x-access-token': localStorage.getItem('token')}, })
     .then((response) => {
-      //set table columns id, first name, last name, gender, dob, email, phone, location, mother language, job_type, description, source
       setTableColumns([
         {
           name: 'ID',
@@ -274,7 +273,7 @@ const ViewPermissions = () => {
             <Button color="secondary" onClick={toggle}>{Close}</Button>
           </ModalFooter>
         </Modal>
-      <Breadcrumb parent="Dashboard" title="View Candidates" />
+      <Breadcrumb parent="Dashboard" title="View Users" />
       <Container fluid={true}>
         <Row>
           <Col sm="12">

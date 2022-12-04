@@ -305,6 +305,58 @@ router.post("/addUser", validateToken, upload.single('file'), (req, res) => {
 });
 });
 
+router.post("/sendMessage", validateToken, async (req, res) => {
+    const { message, to_id } = req.body;
+    const token = req.headers["x-access-token"];
+    const decoded = verify(token, process.env.JWT_SECRET);
+    const from_id = decoded.id;
+    connection.query(
+        "INSERT INTO messages (from_id, to_id, message) VALUES (?, ?, ?)",
+        [from_id, to_id, message],
+        async (error, results) => {
+            if (error) {
+                console.log(error);
+                res.json({
+                    status: false,
+                    message: "Error sending message"
+                });
+            }
+            else {
+                res.json({
+                    status: true,
+                    message: "Message sent"
+                });
+            }
+        }
+    );
+});
+
+router.post("/getMessages", validateToken, async (req, res) => {
+    const token = req.headers["x-access-token"];
+    const decoded = verify(token, process.env.JWT_SECRET);
+    const id = decoded.id;
+    connection.query(
+        "SELECT messages.id, messages.message, first_name, last_name, designation FROM messages, user_pr WHERE (to_id = ? or from_id = ?) AND from_id = user_pr.id ORDER BY messages.id DESC",
+        [id, id],
+        async (error, results) => {
+            if (error) {
+                console.log(error);
+                res.json({
+                    status: false,
+                    message: "Error getting messages"
+                });
+            }
+            else {
+                res.json({
+                    status: true,
+                    message: "Messages retrieved",
+                    data: results
+                });
+            }
+        }
+    );
+});
+
 router.get("/getLoggedUser", validateToken, (req, res) => {
     const token = req.headers["x-access-token"];
     if (!token) {

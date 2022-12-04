@@ -134,7 +134,7 @@ const ViewJobs = () => {
 
   return (
     <Fragment>
-      <Breadcrumb parent="Dashboard" title="View Companies" />
+      <Breadcrumb parent="Dashboard" title="View Jobs" />
       <Container fluid={true}>
         <Row>
           <Col sm="12">
@@ -142,7 +142,7 @@ const ViewJobs = () => {
               <CardHeader>
                 <Row className="align-items-center">
                   <Col>
-                    <h5>{"Companies"}</h5>
+                    <h5>{"Jobs"}</h5>
                   </Col>
                   <Col sm="auto">
                     { button ? <button key="delete" className="btn btn-danger" onClick={handleDelete}>Delete</button> : null }

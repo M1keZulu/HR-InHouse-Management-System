@@ -55,7 +55,7 @@ const AddUser = () => {
 
   return (
     <Fragment>
-      <Breadcrumb parent="Dashboard" title="Add Candidate"/>
+      <Breadcrumb parent="Dashboard" title="Add User"/>
       <Container fluid={true}>
         <Row>
           <Col sm="12" xl="6">
@@ -63,7 +63,7 @@ const AddUser = () => {
               <Col sm="12">
                 <Card>
                   <CardHeader>
-                    <h5>Enter Candidate Details</h5>
+                    <h5>Enter User Details</h5>
                   </CardHeader>
                   <CardBody>
                     <Form className="theme-form">

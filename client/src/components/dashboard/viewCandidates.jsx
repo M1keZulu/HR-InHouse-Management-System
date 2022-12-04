@@ -537,7 +537,7 @@ const ViewCandidates = () => {
               <CardHeader>
                 <Row className="align-items-center">
                   <Col>
-                    <h5>{"Users"}</h5>
+                    <h5>{"Candidates"}</h5>
                   </Col>
                   <Col sm="auto">
                     { button ? <button key="delete" className="btn btn-danger" onClick={handleDelete}>Delete</button> : null }
