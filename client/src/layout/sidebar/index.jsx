@@ -62,6 +62,7 @@ const Sidebar = () => {
                             title: 'Companies', icon: Home, type: 'sub', badge: "badge badge-success", active: false, children: [
                                 { path: `${process.env.PUBLIC_URL}/dashboard/addCompany`, type: 'link', title: 'Add Company' },
                                 { path: `${process.env.PUBLIC_URL}/dashboard/viewCompanies`, type: 'link', title: 'View Companies' },
+                                { path: `${process.env.PUBLIC_URL}/dashboard/addSkill`, type: 'link', title: 'Add Skill' },
                             ]
                         },
                         {
@@ -334,7 +335,7 @@ const Sidebar = () => {
       <div className={`bg-overlay1`} onClick={() => { closeOverlay() }} ></div>
       <div className="sidebar-wrapper" id="sidebar-wrapper" >
         <div className="logo-wrapper">
-          <Link to={`${process.env.PUBLIC_URL}/dashboard/default/${layout}`}>
+          <Link to={`${process.env.PUBLIC_URL}/dashboard/home`}>
             <img className="img-fluid for-light" src={require("../../assets/images/logo/logo.png")} alt="" />
             <img className="img-fluid for-dark" src={require("../../assets/images/logo/logo_dark.png")} alt="" />
           </Link>
@@ -342,7 +343,7 @@ const Sidebar = () => {
           <div className="toggle-sidebar" onClick={() => openCloseSidebar(sidebartoogle)}><Grid className="status_toggle middle sidebar-toggle" /></div>
         </div>
         <div className="logo-icon-wrapper">
-          <Link to={`${process.env.PUBLIC_URL}/dashboard/default/${layout}`}><img className="img-fluid" src={require("../../assets/images/logo/logo-icon.png")} alt="" /></Link>
+          <Link to={`${process.env.PUBLIC_URL}/dashboard/home`}><img className="img-fluid" src={require("../../assets/images/logo/logo-icon.png")} alt="" /></Link>
         </div>
         <nav className="sidebar-main" id="sidebar-main">
           <div className="left-arrow" onClick={scrollToLeft}><ArrowLeft /></div>

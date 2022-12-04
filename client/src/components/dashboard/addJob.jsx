@@ -1,5 +1,6 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import axios from 'axios';
+import Select from 'react-select';
 import Breadcrumb from '../../layout/breadcrumb'
 import { toast } from 'react-toastify';
 import {Container,Row,Col,Card,CardHeader,CardBody,CardFooter,Form,FormGroup,Label,Input,Button} from 'reactstrap'
@@ -23,6 +24,7 @@ const AddJob = () => {
     photo: '',
   });
   const [formData, updateFormData] = React.useState(initialFormData);
+  const [skills, setSkills] = useState([]);
 
   const handleChange = (e) => {
     updateFormData({
@@ -31,11 +33,22 @@ const AddJob = () => {
     });
   };
 
+  const handleSelect = (e) => {
+    var arr = [];
+    for(let i = 0; i < e.length; i++) {
+      arr.push(e[i].value);
+    }
+    updateFormData({
+      ...formData,
+      skills: arr
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
     .post('http://127.0.0.1:8000/jobs/addJob', 
-    formData,
+      formData,
     {headers : 
       {'x-access-token': localStorage.getItem('token')} })
     .then((response) => {
@@ -48,7 +61,19 @@ const AddJob = () => {
     });
   };
 
-  //axios get companies
+  const getSkills = () => {
+    axios
+      .get('http://127.0.0.1:8000/candidates/getAllSkills',
+      {headers :
+        {'x-access-token': localStorage.getItem('token')}, })
+      .then((response) => {
+        setSkills(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const [companies, setCompanies] = useState([]);
   const getCompanies = async () => {
     axios
@@ -67,6 +92,7 @@ const AddJob = () => {
 
   useEffect(() => {
     getCompanies();
+    getSkills();
   }, []);
 
   return (
@@ -115,6 +141,16 @@ const AddJob = () => {
                       <FormGroup>
                         <Label className="col-form-label">Extra Requirements</Label>
                         <Input className="form-control" type="text" name="extra_requirements" onChange={handleChange} />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label className="col-form-label">Skills</Label>
+                        <Select
+                          options={skills.map ((skill) => ({value: skill.id, label: skill.name}))}
+                          placeholder="Select Skills"
+                          isSearchable={true}
+                          isMulti={true}
+                          onChange={handleSelect}
+                        />
                       </FormGroup>
                     </Form>
                   </CardBody>

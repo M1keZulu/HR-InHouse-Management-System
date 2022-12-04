@@ -15,6 +15,7 @@ const CandidateProfile = (props) => {
   const [candidate, setCandidate] = useState();
   const [candidateEducation, setCandidateEducation] = useState();
   const [candidateExperience, setCandidateExperience] = useState();
+  const [candidateSkills, setCandidateSkills] = useState();
 
   const [modalData, setModalData] = useState({});
   const [modal, setModal] = useState(false);
@@ -31,30 +32,15 @@ const CandidateProfile = (props) => {
     });
   };
 
-  const addCandidateEducation = () => {
-    var sendData =
-    {
-      'candidatecv_id': id,
-      'degree_type': modalData.degree_type,
-      'institute': modalData.institute,
-      'starting_date': modalData.starting_date,
-      'ending_date': modalData.ending_date
-    }
+  const getCandidateSkills = (candidate) => {
     axios
-    .post('http://127.0.0.1:8000/candidates/addCandidateEducation', 
-    sendData,
-    {headers : 
-      {'x-access-token': localStorage.getItem('token') } })
-    .then((response) => {
-      if(response.data.status===true){
-        toast.success(response.data.message);
-      }
-      else{
-        toast.error(response.data.message);
-      }   
-      toggle();
+      .get('http://127.0.0.1:8000/candidates/getCandidateSkills/' + id,  
+      {headers : 
+        {'x-access-token': localStorage.getItem('token')}, })
+      .then((response) => {
+        setCandidateSkills(response.data.data);
     });
-  };
+  }
 
   const getCandidateEducation = async () => {
     axios
@@ -74,6 +60,7 @@ const CandidateProfile = (props) => {
       .then((response) => {
         setCandidate(response.data.data[0]);
     });
+    getCandidateSkills();
   }, []);
 
   useEffect(() => {
@@ -93,33 +80,6 @@ const CandidateProfile = (props) => {
 
   return (
     <Fragment>
-      <Modal isOpen={modal} toggle={toggle} className="modal-dialog-centered">
-          <ModalHeader toggle={toggle}>Add Education Details</ModalHeader>
-          <ModalBody>
-          <Form>
-            <FormGroup>
-              <Label for="exampleEmail">Institute Name</Label>
-              <Input type="text" name="institute" id="institute" placeholder="Enter Institute Name" onChange={handleChange} />
-            </FormGroup>
-            <FormGroup>
-              <Label for="examplePassword">Degree Type</Label>
-              <Input type="text" name="degree_type" id="degree_type" placeholder="Enter Degree" onChange={handleChange} />
-            </FormGroup>
-            <FormGroup>
-              <Label for="examplePassword">Start Date</Label>
-              <Input type="date" name="starting_date" id="start_date" placeholder="Enter Start Date" onChange={handleChange} />
-            </FormGroup>
-            <FormGroup>
-              <Label for="examplePassword">End Date</Label>
-              <Input type="date" name="ending_date" id="end_date" placeholder="Enter End Date" onChange={handleChange} />
-            </FormGroup>
-          </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={addCandidateEducation}>Add</Button>
-            <Button color="secondary" onClick={toggle}>{'Close'}</Button>
-          </ModalFooter>
-        </Modal>
       <Breadcrumb parent="Users" title="Candidate Profile" />
       <Container fluid={true}>
         <div className="user-profile">
@@ -183,19 +143,15 @@ const CandidateProfile = (props) => {
                           <h5 className="mt-0 user-name">{'Education Details'}</h5>
                         </div>
                     </Col>
-                    <Col sm="4">
-                      <button className="btn btn-primary" onClick={toggle}>Add Education</button>
-                    </Col>
                   </Row>
                   <hr />
                   {candidateEducation && candidateEducation.map((education) => (
                     <div className="media">
                       <div className="media-body">
                         <h6 className="mt-0 f-w-600">{education.degree_type}</h6>
-                        <p>{education.degree_name}</p>
-                        <p>{education.institute}</p>
-                        <p>{education.starting_date}</p>
-                        <p>{education.ending_date}</p>
+                        <p>Institute - {education.institute}</p>
+                        <p>Starting Date - {education.starting_date}</p>
+                        <p>Ending - {education.ending_date}</p>
                       </div>
                     </div>
                   ))}
@@ -220,7 +176,16 @@ const CandidateProfile = (props) => {
                     </Col>
                   </Row>
                   <hr />
-                  <p>{UserProfileDesc1}</p>
+                  {candidateExperience && candidateExperience.map((experience) => (
+                    <div className="media">
+                      <div className="media-body">
+                        <h6 className="mt-0 f-w-600">{experience.designation}</h6>
+                        <p>Company - {experience.company_name}</p>
+                        <p>Starting Date - {experience.starting_date}</p>
+                        <p>Ending - {experience.ending_date}</p>
+                      </div>
+                    </div>
+                  ))}
                   <div className="img-container">
                     <div id="aniimated-thumbnials">
                     </div>
@@ -242,7 +207,41 @@ const CandidateProfile = (props) => {
                     </Col>
                   </Row>
                   <hr />
-                  <p>{UserProfileDesc1}</p>
+                  {candidateSkills && candidateSkills.map((skill) => (
+                    <div className="media">
+                      <div className="media-body">
+                        <h6 className="mt-0 f-w-600">{skill.name}</h6>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="img-container">
+                    <div id="aniimated-thumbnials">
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+
+            <Col sm="12" >
+              <Card>
+                <div className="profile-img-style">
+                  <Row>
+                    <Col sm="8">
+                        <div className="media-body align-self-center">
+                          <h5 className="mt-0 user-name">{'Skills'}</h5>
+                        </div>
+                    </Col>
+                    <Col sm="4" className="align-self-center">
+                    </Col>
+                  </Row>
+                  <hr />
+                  {/* {candidatecv_files && candidatecv_files.map((cv_file) => (
+                    <div className="media">
+                      <div className="media-body">
+                        <h6 className="mt-0 f-w-600">{cv_file.name}</h6>
+                      </div>
+                    </div>
+                  ))} */}
                   <div className="img-container">
                     <div id="aniimated-thumbnials">
                     </div>

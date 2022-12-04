@@ -59,6 +59,28 @@ router.post("/updateCompany", validateToken, (req, res) => {
     );
 });
 
+router.post("/addSkill", validateToken, (req, res) => {
+    const { name } = req.body;
+    connection.query(
+        "INSERT INTO skills (name) VALUES (?)",
+        [name],
+        (error, results) => {
+            if (error) {
+                res.json({
+                    status: false,
+                    message: "Error occured",
+                });
+            }
+            else {
+                res.json({
+                    status: true,
+                    message: "Skill added successfully",
+                });
+            }
+        }
+    );
+});
+
 router.post("/deleteCompany", validateToken, (req, res) => {
     const deleteID= req.body.id;
     //transaction

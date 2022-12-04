@@ -18,6 +18,7 @@ const Rightbar = () => {
   const history = useNavigate();
   const [profile, setProfile] = useState('');
   const [name, setName] = useState('')
+  const [designation, setDesignation] = useState('')
   const [searchresponsive, setSearchresponsive] = useState(false)
   const [langdropdown, setLangdropdown] = useState(false)
   const [moonlight, setMoonlight] = useState(false)
@@ -50,6 +51,7 @@ const Rightbar = () => {
         else{
           setName(response.data.user.first_name + ' ' + response.data.user.last_name);
           setImg(response.data.user.photo);
+          setDesignation(response.data.user.designation);
         }
     });
 
@@ -159,7 +161,7 @@ const Rightbar = () => {
             <div className="media profile-media">
               <img className="b-r-10" src={'http://127.0.0.1:8000/' + imgSrc} alt="" />
               <div className="media-body"><span>{name}</span>
-                <p className="mb-0 font-roboto">{Admin} <i className="middle fa fa-angle-down"></i></p>
+                <p className="mb-0 font-roboto">{designation} <i className="middle fa fa-angle-down"></i></p>
               </div>
             </div>
             <ul className="profile-dropdown onhover-show-div">

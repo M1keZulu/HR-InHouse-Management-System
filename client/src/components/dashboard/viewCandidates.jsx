@@ -18,6 +18,7 @@ const ViewCandidates = () => {
 
   const [modalData, setModalData] = useState({});
   const [modal, setModal] = useState(false);
+  const [skills, setSkills] = useState([]);
 
   const toggle = (row) => {
     setModal(!modal);
@@ -48,13 +49,43 @@ const ViewCandidates = () => {
     },
   };
 
+  const getSkills = () => {
+    axios
+      .get('http://127.0.0.1:8000/candidates/getAllSkills',
+      {headers :
+        {'x-access-token': localStorage.getItem('token')}, })
+      .then((response) => {
+        setSkills(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  
+  const handleAddSkill = (e) => {
+    axios
+    .post('http://127.0.0.1:8000/candidates/addSkill',
+    {'candidatecv_id': modalData.id, 'skill_id': modalData.skill_id},
+    {headers:
+      {'x-access-token': localStorage.getItem('token')},
+    })
+    .then((response) => {
+      if(response.data.status === true){
+        toast.success(response.data.message);
+        getSkills();
+      }
+      else{
+        toast.error(response.data.message);
+      }
+    });
+  };
+
   useEffect(() => {
     axios
       .get('http://127.0.0.1:8000/candidates/getCandidates',  
       {headers : 
         {'x-access-token': localStorage.getItem('token')}, })
       .then((response) => {
-        //set table columns id, first name, last name, gender, dob, email, phone, location, mother language, job_type, description, source
         setTableColumns([
           {
             name: 'ID',
@@ -130,6 +161,7 @@ const ViewCandidates = () => {
         ]);
         setData(response.data.data);
     });
+    getSkills();
   }, []);
 
   const handleChange = (e) => {
@@ -185,6 +217,62 @@ const ViewCandidates = () => {
             setModal(false);
       })
   }
+
+  const handleAddEducation = () => {
+    var sendData =
+    {
+      'candidatecv_id': modalData.id,
+      'degree_type': modalData.degree_type,
+      'institute': modalData.institute,
+      'starting_date': modalData.starting_date,
+      'ending_date': modalData.ending_date
+    }
+    axios
+    .post('http://127.0.0.1:8000/candidates/addCandidateEducation', 
+    sendData,
+    {headers : 
+      {'x-access-token': localStorage.getItem('token') } })
+    .then((response) => {
+      if(response.data.status===true){
+        toast.success(response.data.message);
+        document.getElementById("degree_type").value = "";
+        document.getElementById("institute").value = "";
+        document.getElementById("starting_date").value = "";
+        document.getElementById("ending_date").value = "";
+      }
+      else{
+        toast.error(response.data.message);
+      }   
+    });
+  };
+
+  const handleAddExperience = () => {
+    var sendData =
+    {
+      'candidatecv_id': modalData.id,
+      'company_name': modalData.company_name,
+      'designation': modalData.designation,
+      'starting_date': modalData.starting_date,
+      'ending_date': modalData.ending_date
+    }
+    axios
+    .post('http://127.0.0.1:8000/candidates/addCandidateExperience', 
+    sendData,
+    {headers : 
+      {'x-access-token': localStorage.getItem('token') } })
+    .then((response) => {
+      if(response.data.status===true){
+        toast.success(response.data.message);
+        document.getElementById("company_name").value = "";
+        document.getElementById("designation").value = "";
+        document.getElementById("starting_date").value = "";
+        document.getElementById("ending_date").value = "";
+      }
+      else{
+        toast.error(response.data.message);
+      }   
+    });
+  };
 
   const contextActions = useMemo(() => {
      if(selectedRows.length > 0) {
@@ -321,6 +409,118 @@ const ViewCandidates = () => {
                   value={modalData.source}
                   onChange={handleChange}
                 />
+              </FormGroup>
+            </Form>
+            <Form>
+              <h5>Add Candidate Education</h5>
+              <FormGroup>
+                <Label for="institute">Institute</Label>
+                <Input
+                  type="text"
+                  name="institute"
+                  id="institute"
+                  placeholder="Institute"
+                  value={modalData.institute}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="degree_type">Degree Type</Label>
+                <Input
+                  type="text"
+                  name="degree_type"
+                  id="degree_type"
+                  placeholder="Degree Type"
+                  value={modalData.degree_type}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="start_date">Start Date</Label>
+                <Input
+                  type="date"
+                  name="starting_date"
+                  id="starting_date"
+                  placeholder="Start Date"
+                  value={modalData.start_date}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="end_date">End Date</Label>
+                <Input
+                  type="date"
+                  name="ending_date"
+                  id="ending_date"
+                  placeholder="End Date"
+                  value={modalData.end_date}
+                  onChange={handleChange}
+                />
+                <br/>
+                <Button color="primary" onClick={handleAddEducation}>
+                  Add Education
+                </Button>
+              </FormGroup>
+              <h5>Add Candidate Experience</h5>
+              <FormGroup>
+                <Label for="company_name">Company Name</Label>
+                <Input
+                  type="text"
+                  name="company_name"
+                  id="company_name"
+                  placeholder="Company Name"
+                  value={modalData.company_name}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="designation">Designation</Label>
+                <Input
+                  type="text"
+                  name="designation"
+                  id="designation"
+                  placeholder="Designation"
+                  value={modalData.designation}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="starting_date">Start Date</Label>
+                <Input
+                  type="date"
+                  name="starting_date"
+                  id="starting_date"
+                  placeholder="Start Date"
+                  value={modalData.starting_date}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="ending_date">End Date</Label>
+                <Input
+                  type="date"
+                  name="ending_date"
+                  id="ending_date"
+                  placeholder="End Date"
+                  value={modalData.ending_date}
+                  onChange={handleChange}
+                />
+                <br/>
+                <Button color="primary" onClick={handleAddExperience}>
+                  Add Experience
+                </Button>
+              </FormGroup>
+              <FormGroup>
+                <Label for="skills">Skills</Label>
+                <Input type="select" name="skill_id" id="skill_id" onChange={handleChange}>
+                  {skills.map((skill) => (
+                    <option value={skill.id}>{skill.name}</option>
+                  ))}
+                </Input>
+                <br/>
+                <Button color="primary" onClick={handleAddSkill}>
+                  Add Skill
+                </Button>
               </FormGroup>
             </Form>
           </ModalBody>

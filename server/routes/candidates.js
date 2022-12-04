@@ -61,10 +61,11 @@ router.get("/getCandidateProfile/:id", validateToken, (req, res) => {
 
 router.get("/getCandidateEducation/:id", validateToken, (req, res) => {
     connection.query(
-        "SELECT * FROM candidatecv_education WHERE candidatecv_id = ?",
+        "SELECT candidatecv_education.institute, candidatecv_education.degree_type, DATE_FORMAT(starting_date, '%m-%d-%Y') as 'starting_date', DATE_FORMAT(ending_date, '%m-%d-%Y') as 'ending_date' FROM candidatecv_education WHERE candidatecv_id = ?",
         [req.params.id],
         (error, results) => {
             if (error) {
+                console.log(error);
                 res.json({
                     status: false,
                     message: "Error occured",
@@ -101,12 +102,100 @@ router.get("/getCandidateExperience/:id", validateToken, (req, res) => {
     );
 });
 
+router.get("/getAllSkills", validateToken, (req, res) => {
+    connection.query(
+        "SELECT * FROM skills",
+        (error, results) => {
+            if (error) {
+                res.json({
+                    status: false,
+                    message: "Error occured",
+                });
+            }
+            else {
+                res.json({
+                    status: true,
+                    data: results,
+                });
+            }
+        }
+    );
+});
+                
+
+router.post("/addSkill", validateToken, (req, res) => {
+    connection.query(
+        "INSERT INTO candidatecv_skill (candidatecv_id, skill_id) VALUES (?, ?)",
+        [req.body.candidatecv_id, req.body.skill_id],
+        (error, results) => {
+            if (error) {
+                console.log(error);
+                res.json({
+                    status: false,
+                    message: "Error occured",
+                });
+            }
+            else {
+                res.json({
+                    status: true,
+                    message: "Skill added successfully",
+                });
+            }
+        }
+    );
+});
+
+router.get("/getCandidateSkills/:id", validateToken, (req, res) => {
+    connection.query(
+        "SELECT skills.name FROM candidatecv_skill, skills WHERE candidatecv_id = ? AND candidatecv_skill.skill_id = skills.id",
+        [req.params.id],
+        (error, results) => {
+            if (error) {
+                console.log(error);
+                res.json({
+                    status: false,
+                    message: "Error occured",
+                });
+            }
+            else {
+                res.json({
+                    status: true,
+                    data: results,
+                });
+            }
+        }
+    );
+});
+
+router.post("/addCandidateExperience", validateToken, (req, res) => {
+    const { candidatecv_id, company_name, designation, starting_date, ending_date } = req.body;
+    connection.query(
+        "INSERT INTO candidatecv_job_history (candidatecv_id, company_name, designation, starting_date, ending_date) VALUES (?, ?, ?, ?, ?)",
+        [candidatecv_id, company_name, designation, starting_date, ending_date],
+        (error, results) => {
+            if (error) {
+                res.json({
+                    status: false,
+                    message: "Error occured",   
+                }); 
+            }   
+            else {
+                res.json({
+                    status: true,   
+                    message: "Experience added successfully",
+                });
+            }
+        }
+    );
+});
+
 router.post("/addCandidateEducation", validateToken, (req, res) => {
     connection.query(
         "INSERT INTO candidatecv_education (candidatecv_id, institute, degree_type, starting_date, ending_date) VALUES (?, ?, ?, ?, ?)",
         [req.body.candidatecv_id, req.body.institute, req.body.degree_type, req.body.starting_date, req.body.ending_date],
         (error, results) => {
             if (error) {
+                console.log(error);
                 res.json({
                     status: false,
                     message: "Error occured",

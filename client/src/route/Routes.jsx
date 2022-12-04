@@ -14,6 +14,7 @@ import ViewJobs from '../components/dashboard/viewJobs'
 import JobProfile from '../components/dashboard/jobProfile'
 import AddUser from '../components/dashboard/addUser'
 import ViewPermissions from '../components/dashboard/viewPermissions'
+import AddSkill from '../components/dashboard/addSkill'
 
 
 // widgets
@@ -229,6 +230,7 @@ export const routes = [
         { path: `${process.env.PUBLIC_URL}/dashboard/jobProfile/:id/:layout`, Component: <JobProfile /> },
         { path: `${process.env.PUBLIC_URL}/dashboard/addUser/:layout`, Component: <AddUser /> },
         { path: `${process.env.PUBLIC_URL}/dashboard/viewPermissions/:layout`, Component: <ViewPermissions /> },
+        { path: `${process.env.PUBLIC_URL}/dashboard/addSkill/:layout`, Component: <AddSkill /> },
 
         { path: `${process.env.PUBLIC_URL}/dashboard/default/:layout/`, Component: <Default /> },
         { path: `${process.env.PUBLIC_URL}/dashboard/ecommerce/:layout/`, Component: <Ecommerce /> },

@@ -3,6 +3,7 @@ const router = express.Router();
 const { validateToken } = require("../middlewares/AuthMiddleware");
 const brcypt = require("bcrypt");
 const multer = require("multer");
+const fs = require('fs');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -112,6 +113,165 @@ router.post("/updateUser", validateToken, async (req, res) => {
         );
     });
 });
+
+router.post("/uploadFile", validateToken, upload.single('file'), async (req, res) => {
+    const token = req.headers["x-access-token"];
+    const decoded = verify(token, process.env.JWT_SECRET);
+    const id = decoded.id;
+    const file = req.file;
+    console.log(file);
+    connection.query(
+        "INSERT into user_files (user_id, file_name, path) VALUES (?, ?, ?)",
+        [id, file.originalname, file.path],
+        async (error, results) => {
+            if (error) {
+                console.log(error);
+                res.json({
+                    status: false,
+                    message: "Error uploading file"
+                });
+            }
+            else {
+                res.json({
+                    status: true,
+                    message: "File uploaded"
+                });
+            }
+        }
+    );
+});
+
+router.post("/shareFile", validateToken, async (req, res) => {
+    const { file_id, shared } = req.body;
+    const token = req.headers["x-access-token"];
+    const decoded = verify(token, process.env.JWT_SECRET);
+    const from_id = decoded.id;
+    //map shared to different rows
+    var insert_values = [];
+    for (var i = 0; i < shared.length; i++) {
+        insert_values.push([file_id, shared[i], from_id]);
+    }
+    connection.query(
+        "INSERT into file_share VALUES ?",
+        [insert_values],
+        async (error, results) => {
+            if (error) {
+                console.log(error);
+                res.json({
+                    status: false,
+                    message: "Error sharing file"
+                });
+            }
+            else {
+                res.json({
+                    status: true,
+                    message: "File shared"
+                });
+            }
+        }
+    );
+});
+
+router.get("/getFiles", validateToken, async (req, res) => {
+    const token = req.headers["x-access-token"];
+    const decoded = verify(token, process.env.JWT_SECRET);
+    const id = decoded.id;
+    connection.query(
+        "SELECT * FROM user_files WHERE user_id = ?",
+        [id],
+        async (error, results) => {
+            if (error) {
+                console.log(error);
+                res.json({
+                    status: false,
+                    message: "Error getting files"
+                });
+            }
+            else {
+                res.json({
+                    status: true,
+                    message: "Files retrieved",
+                    data: results
+                });
+            }
+        }
+    );
+});
+
+router.get('/getSharedFiles', validateToken, async (req, res) => {
+    const token = req.headers["x-access-token"];
+    const decoded = verify(token, process.env.JWT_SECRET);
+    const id = decoded.id;
+    connection.query(
+        "SELECT user_files.id, user_files.user_id, user_files.file_name, user_files.path, user_pr.first_name, user_pr.last_name FROM user_files, file_share, user_pr WHERE user_files.id IN (SELECT file_share.file_id FROM file_share WHERE file_share.to_id = ?) AND user_files.id = file_share.file_id and user_pr.id = from_id",
+        [id],
+        async (error, results) => {
+            if (error) {
+                console.log(error);
+                res.json({
+                    status: false,
+                    message: "Error getting files"
+                });
+            }
+            else {
+                console.log(results);
+                res.json({
+                    status: true,
+                    message: "Files retrieved",
+                    data: results
+                });
+            }
+        }
+    );
+}); 
+
+router.post("/deleteFile", validateToken, async (req, res) => {
+    const { file_id } = req.body;
+    console.log(file_id);
+    const token = req.headers["x-access-token"];
+    const decoded = verify(token, process.env.JWT_SECRET);
+    const id = decoded.id;
+    connection.query(
+        "select * from user_files where id = ? and user_id = ?",
+        [file_id, id],
+        async (error, results) => {
+            if (error) {
+                console.log(error);
+            }
+            else {
+                try {
+                    fs.unlinkSync(results[0].path);
+                  } catch(err) {
+                    return res.json({
+                        status: false,
+                        message: "You do not own the file"
+                    });
+                  }
+                }
+            }
+    );
+    console.log(file_id, id);
+    connection.query(
+        "DELETE FROM user_files WHERE id = ? AND user_id = ?",
+        [file_id, id],
+        async (error, results) => {
+            if (error) {
+                console.log(error);
+                res.json({
+                    status: false,
+                    message: "Error deleting file"
+                });
+            }
+            else {
+                res.json({
+                    status: true,
+                    message: "File deleted"
+                });
+            }
+        }
+    );
+});
+
 
 router.post("/addUser", validateToken, upload.single('file'), (req, res) => {
     var photo=null;

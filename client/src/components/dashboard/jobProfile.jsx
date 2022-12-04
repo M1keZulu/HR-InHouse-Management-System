@@ -24,6 +24,7 @@ const JobProfile = (props) => {
 
   const [modalData, setModalData] = useState({});
   const [modal, setModal] = useState(false);
+  const [skills, setSkills] = useState([]);
 
   const toggle = (row) => {
     setModal(!modal);
@@ -47,6 +48,16 @@ const JobProfile = (props) => {
           toast.error(response.data.message);
         }
       })
+  }
+
+  const getJobSkills = () => {
+    axios
+      .get('http://127.0.0.1:8000/jobs/getJobSkills/' + id,  
+      {headers : 
+        {'x-access-token': localStorage.getItem('token')}, })
+      .then((response) => {
+        setSkills(response.data.data);
+    });
   }
 
   const getAllCandidates = () => {
@@ -114,8 +125,20 @@ const JobProfile = (props) => {
     });
   }
 
+  const getSkillCandidates = () => {
+    axios
+      .get('http://127.0.0.1:8000/jobs/getSkillCandidates/' + id,  
+      {headers : 
+        {'x-access-token': localStorage.getItem('token')}, })
+      .then((response) => {
+        setCandidateData(response.data.data);
+    });
+  }
+    
+
   useEffect(() => {
     getAllCandidates();
+    getJobSkills();
   }, []);
 
   useEffect(() => {
@@ -130,15 +153,16 @@ const JobProfile = (props) => {
     getInProcessCandidates();
   }, []);
 
-  const updateStatus = (id) => {
+  const updateStatus = (id, e) => {
+    console.log(e.target.value);
     axios
       .post('http://127.0.0.1:8000/jobs/updateStatus',
-      {id: id, status: document.getElementById("status"). value},
+      {id: id, status: e.target.value},
       {headers : 
         {'x-access-token': localStorage.getItem('token')}, })
       .then((response) => { 
-        getInProcessCandidates();
         toast.success(response.data.message);
+        getInProcessCandidates();
     });
   }
 
@@ -206,7 +230,7 @@ const JobProfile = (props) => {
         width: '200px',
         cell: (row) => (
           <div>
-            <Input type="select" name="select" id="status" onChange={() => updateStatus(row.link_id)}>
+            <Input type="select" name="select" id="status" onChange={(e) => updateStatus(row.link_id, e)}>
               <option value="Shortlisted">Shortlisted</option>
               <option value="Accepted">Accepted</option>
               <option value="Rejected">Rejected</option>
@@ -268,7 +292,17 @@ const JobProfile = (props) => {
                             <h6> {'Company Name'}</h6><span>{job && job.company_name}</span>
                           </div>
                         </Col>
-                       
+                        <Col md="6">
+                          <div className="ttl-info text-start ttl-sm-mb-0">
+                            <h6>{'Skills'}</h6>
+                            {skills && skills.map((skill, index) => {
+                              return (
+                                <span key={index}>{skill.name} </span>
+                              )
+                            }
+                            )}
+                          </div>
+                        </Col>
                       </Row>
                     </Col>
                   </Row>
@@ -276,8 +310,6 @@ const JobProfile = (props) => {
                 </div>
               </Card>
             </Col>
-
-
             <Col sm="12" >
               <Card>
                 <div className="profile-img-style">
@@ -306,7 +338,6 @@ const JobProfile = (props) => {
                 </div>
               </Card>
             </Col>
-
             <Col sm="12" >
               <Card>
                 <div className="profile-img-style">
@@ -318,6 +349,8 @@ const JobProfile = (props) => {
                     </Card>
                   </Row>
                   <hr />
+                  <Button color="primary" className="mr-2" onClick={getSkillCandidates}>Get Skill Candidates</Button>
+                   <br/>
                     <CardBody>
                       <DataTable
                         data={candidateData}
