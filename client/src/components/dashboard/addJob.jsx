@@ -56,7 +56,7 @@ const AddJob = () => {
         toast.success(response.data.message);
       }
       else{
-        toast.error(response.data.message);
+        toast.error("Error has occured, can't add job");
       }   
     });
   };

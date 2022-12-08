@@ -91,7 +91,7 @@ const CandidateProfile = (props) => {
                   <br></br>
                 </div>
                 <div className="user-image">
-                  <div className="avatar"><Media body alt="" src={require('../../assets/images/user/7.jpg')} data-intro="Profile image" /></div>
+                  <div className="avatar"><Media body alt="" src={'http://localhost:8000/' + (candidate && candidate.photo)} data-intro="Profile image" /></div>
                 </div>
                 <div className="info">
                   <Row>
@@ -222,33 +222,6 @@ const CandidateProfile = (props) => {
               </Card>
             </Col>
 
-            <Col sm="12" >
-              <Card>
-                <div className="profile-img-style">
-                  <Row>
-                    <Col sm="8">
-                        <div className="media-body align-self-center">
-                          <h5 className="mt-0 user-name">{'Skills'}</h5>
-                        </div>
-                    </Col>
-                    <Col sm="4" className="align-self-center">
-                    </Col>
-                  </Row>
-                  <hr />
-                  {/* {candidatecv_files && candidatecv_files.map((cv_file) => (
-                    <div className="media">
-                      <div className="media-body">
-                        <h6 className="mt-0 f-w-600">{cv_file.name}</h6>
-                      </div>
-                    </div>
-                  ))} */}
-                  <div className="img-container">
-                    <div id="aniimated-thumbnials">
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </Col>
             
           </Row>
         </div>

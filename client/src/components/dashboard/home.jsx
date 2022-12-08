@@ -274,30 +274,7 @@ const Home = () => {
             </Card>
           </div>
         </Row>
-        <Row>
-          <div>
-            <Card>
-              <CardHeader>
-                <h5>{'Messages'}</h5>
-              </CardHeader>
-              <CardBody>
-                <form onSubmit={""}>
-                  <Input type="text" id="message" />
-                  <br/>
-                  <Button color="primary" type="submit">
-                    Send
-                  </Button>
-                </form>
-              </CardBody>
-                <DataTable
-                  columns={fileTableColumns}
-                  data={files}
-                  noHeader={true}
-                  defaultSortField="name"
-                  ></DataTable>
-            </Card>
-          </div>
-        </Row>
+        
       </Container>
     </Fragment>
   );

@@ -6,7 +6,7 @@ require('dotenv').config()
 
 app.use(express.json());
 app.use(cors({
-    origin: ['*', 'http://localhost:3001'],
+    origin: ['*', 'http://localhost:3000'],
 }));
 
 const userRouter = require('./routes/users');

@@ -10,8 +10,8 @@ import axios from 'axios';
 
 const Logins = (props) => {
 
-  const [email, setEmail] = useState("arhamnasir@gmail.com");
-  const [password, setPassword] = useState("arhamnasir");
+  const [email, setEmail] = useState("zain@gmail.com");
+  const [password, setPassword] = useState("zain");
   const [togglePassword, setTogglePassword] = useState(false);
   const defaultLayoutObj = classes.find(item => Object.values(item).pop(1) === 'compact-wrapper');
   const layout = {home: "compact-wrapper modern-type"} || Object.keys(defaultLayoutObj).pop();
@@ -111,11 +111,9 @@ const Logins = (props) => {
                       <div className="login-btn mb-0">
                         <div className="checkbox ms-3">
                           <Input id="checkbox1" type="checkbox" />
-                          <Label className="text-muted" for="checkbox1">{RememberPassword}</Label>
-                        </div><a className="link" href="#javascript">{ForgotPassword}</a>
+                        </div>
                           <Button color="primary" onClick={() => loginWithJwt(email, password)}>{LoginWithJWT}</Button>
                       </div>
-                      <p className="mt-4 mb-0">{"Don't have account?"}<a className="ms-2" href="#javascript">{CreateAccount}</a></p>
                     </Form>
                   </TabPane>
                 </TabContent>

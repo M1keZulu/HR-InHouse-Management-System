@@ -20,6 +20,7 @@ var upload = multer({ storage: storage })
 let connection = require("../database");
 
 const { sign, verify } = require('jsonwebtoken');
+const { resolveObjectURL } = require("buffer");
 
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
@@ -90,6 +91,7 @@ router.post("/updateUser", validateToken, async (req, res) => {
                                             });
                                         }
                                         else {
+                                            
                                             connection.commit(function(err) {
                                                 if (err) {
                                                     return connection.rollback(function() {
@@ -157,6 +159,12 @@ router.post("/shareFile", validateToken, async (req, res) => {
         async (error, results) => {
             if (error) {
                 console.log(error);
+                if(error.errno == 1062){
+                    return res.json({
+                        status: false,
+                        message: "File already shared with one of the user. Try again"
+                    });
+                }
                 res.json({
                     status: false,
                     message: "Error sharing file"
@@ -176,6 +184,7 @@ router.get("/getFiles", validateToken, async (req, res) => {
     const token = req.headers["x-access-token"];
     const decoded = verify(token, process.env.JWT_SECRET);
     const id = decoded.id;
+
     connection.query(
         "SELECT * FROM user_files WHERE user_id = ?",
         [id],

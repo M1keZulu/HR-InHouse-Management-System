@@ -1,0 +1,549 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema hr_system
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema hr_system
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `hr_system` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `hr_system` ;
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`actions`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`actions` (
+  `id` INT UNSIGNED NOT NULL,
+  `name` VARCHAR(50) NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`candidatecv`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`candidatecv` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` CHAR(36) NOT NULL,
+  `first_name` VARCHAR(50) NOT NULL,
+  `last_name` VARCHAR(50) NOT NULL,
+  `gender` ENUM('male', 'female') NOT NULL,
+  `dob` DATE NULL DEFAULT NULL,
+  `phone` VARCHAR(191) NULL DEFAULT NULL,
+  `email` VARCHAR(191) NULL DEFAULT NULL,
+  `location` VARCHAR(191) NULL DEFAULT NULL,
+  `mother_language` VARCHAR(50) NULL DEFAULT NULL,
+  `job_type` ENUM('part_time', 'full_time') NOT NULL DEFAULT 'full_time',
+  `description` TEXT NULL DEFAULT NULL,
+  `source` VARCHAR(100) NULL DEFAULT NULL,
+  `photo` VARCHAR(255) NULL DEFAULT NULL,
+  `consent` TINYINT(1) NULL DEFAULT '0',
+  `newsletter` TINYINT(1) NULL DEFAULT '0',
+  `action_id` BIGINT UNSIGNED NULL DEFAULT '1',
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `candidatecv_action_id_foreign` (`action_id` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 18
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`education_degrees`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`education_degrees` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(191) NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 13
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`candidatecv_education`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`candidatecv_education` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `degree_id` BIGINT UNSIGNED NOT NULL DEFAULT '1',
+  `candidatecv_id` BIGINT UNSIGNED NOT NULL,
+  `institute` VARCHAR(50) NOT NULL,
+  `starting_date` DATE NOT NULL,
+  `ending_date` DATE NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  `degree_type` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `candidatecv_education_candidatecv_id_foreign` (`candidatecv_id` ASC) VISIBLE,
+  INDEX `candidatecv_education_degree_id_foreign` (`degree_id` ASC) VISIBLE,
+  CONSTRAINT `candidatecv_education_candidatecv_id_foreign`
+    FOREIGN KEY (`candidatecv_id`)
+    REFERENCES `hr_system`.`candidatecv` (`id`),
+  CONSTRAINT `candidatecv_education_degree_id_foreign`
+    FOREIGN KEY (`degree_id`)
+    REFERENCES `hr_system`.`education_degrees` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 14
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`candidatecv_files`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`candidatecv_files` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `candidatecv_id` BIGINT UNSIGNED NOT NULL,
+  `file_name` VARCHAR(50) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `path` VARCHAR(255) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `candidatecv_files_candidatecv_id_foreign` (`candidatecv_id` ASC) VISIBLE,
+  CONSTRAINT `candidatecv_files_candidatecv_id_foreign`
+    FOREIGN KEY (`candidatecv_id`)
+    REFERENCES `hr_system`.`candidatecv` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`candidatecv_job_history`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`candidatecv_job_history` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `candidatecv_id` BIGINT UNSIGNED NOT NULL,
+  `company_name` VARCHAR(100) NOT NULL,
+  `designation` VARCHAR(50) NOT NULL,
+  `starting_date` DATE NOT NULL,
+  `ending_date` DATE NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  `still_working` TINYINT(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  INDEX `candidatecv_job_history_candidatecv_id_foreign` (`candidatecv_id` ASC) VISIBLE,
+  CONSTRAINT `candidatecv_job_history_candidatecv_id_foreign`
+    FOREIGN KEY (`candidatecv_id`)
+    REFERENCES `hr_system`.`candidatecv` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 6
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`languages`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`languages` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(15) NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`candidatecv_language`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`candidatecv_language` (
+  `candidatecv_id` BIGINT UNSIGNED NOT NULL,
+  `language_id` BIGINT UNSIGNED NOT NULL,
+  `level` ENUM('A1', 'A2', 'B1', 'B2', 'C1', 'C2') CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  INDEX `candidatecv_language_candidatecv_id_foreign` (`candidatecv_id` ASC) VISIBLE,
+  INDEX `candidatecv_language_language_id_foreign` (`language_id` ASC) VISIBLE,
+  CONSTRAINT `candidatecv_language_candidatecv_id_foreign`
+    FOREIGN KEY (`candidatecv_id`)
+    REFERENCES `hr_system`.`candidatecv` (`id`),
+  CONSTRAINT `candidatecv_language_language_id_foreign`
+    FOREIGN KEY (`language_id`)
+    REFERENCES `hr_system`.`languages` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`candidatecv_pr`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`candidatecv_pr` (
+  `id` BIGINT UNSIGNED NOT NULL,
+  `candidate_ID` INT NOT NULL,
+  `int_code` VARCHAR(5) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `phone_number` VARCHAR(20) NOT NULL,
+  `photo` BLOB NOT NULL,
+  `date_added` DATE NOT NULL,
+  `userpr_ID` INT NOT NULL,
+  `nr_of_jobs` SMALLINT NOT NULL,
+  `time_from_last_act` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_of_birth` DATE NOT NULL,
+  `lang_lvl` VARCHAR(2) NOT NULL,
+  `file_ID` INT NOT NULL,
+  `tag_ID` INT NOT NULL,
+  `skill_ID` INT NOT NULL,
+  `action_ID` INT NOT NULL,
+  `consent_ID` INT NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`skills`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`skills` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(30) NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 22
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`candidatecv_skill`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`candidatecv_skill` (
+  `candidatecv_id` BIGINT UNSIGNED NOT NULL,
+  `skill_id` BIGINT UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`candidatecv_id`, `skill_id`),
+  INDEX `candidatecv_skill_candidatecv_id_foreign` (`candidatecv_id` ASC) VISIBLE,
+  INDEX `candidatecv_skill_skill_id_foreign` (`skill_id` ASC) VISIBLE,
+  CONSTRAINT `candidatecv_skill_candidatecv_id_foreign`
+    FOREIGN KEY (`candidatecv_id`)
+    REFERENCES `hr_system`.`candidatecv` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `candidatecv_skill_skill_id_foreign`
+    FOREIGN KEY (`skill_id`)
+    REFERENCES `hr_system`.`skills` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`tags`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`tags` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(15) NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`candidatecv_tag`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`candidatecv_tag` (
+  `candidatecv_id` BIGINT UNSIGNED NOT NULL,
+  `tag_id` BIGINT UNSIGNED NOT NULL,
+  INDEX `candidatecv_tag_candidatecv_id_foreign` (`candidatecv_id` ASC) VISIBLE,
+  INDEX `candidatecv_tag_tag_id_foreign` (`tag_id` ASC) VISIBLE,
+  CONSTRAINT `candidatecv_tag_candidatecv_id_foreign`
+    FOREIGN KEY (`candidatecv_id`)
+    REFERENCES `hr_system`.`candidatecv` (`id`),
+  CONSTRAINT `candidatecv_tag_tag_id_foreign`
+    FOREIGN KEY (`tag_id`)
+    REFERENCES `hr_system`.`tags` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`companies`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`companies` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `location` VARCHAR(45) NULL DEFAULT NULL,
+  `phone` VARCHAR(45) NULL DEFAULT NULL,
+  `email` VARCHAR(45) NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 7
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`timezones`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`timezones` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(44) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `timezone` VARCHAR(30) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 141
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`user_pr`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`user_pr` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `first_name` VARCHAR(100) NOT NULL,
+  `last_name` VARCHAR(100) NOT NULL,
+  `photo` VARCHAR(255) NULL DEFAULT NULL,
+  `phone` VARCHAR(20) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `designation` VARCHAR(100) NULL DEFAULT NULL,
+  `timezone_id` BIGINT UNSIGNED NULL DEFAULT '1',
+  `permission_ID` INT NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT NULL,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `user_pr_timezone_id_foreign` (`timezone_id` ASC) VISIBLE,
+  CONSTRAINT `user_pr_timezone_id_foreign`
+    FOREIGN KEY (`timezone_id`)
+    REFERENCES `hr_system`.`timezones` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 30
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`user_files`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`user_files` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT UNSIGNED NOT NULL,
+  `file_name` VARCHAR(1000) NOT NULL,
+  `path` VARCHAR(1000) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `u_id_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `us_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `hr_system`.`user_pr` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 10
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`file_share`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`file_share` (
+  `file_id` INT UNSIGNED NOT NULL,
+  `to_id` BIGINT UNSIGNED NOT NULL,
+  `from_id` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`file_id`, `to_id`, `from_id`),
+  INDEX `fil_id_idx` (`file_id` ASC) VISIBLE,
+  INDEX `usto_id_idx` (`to_id` ASC) VISIBLE,
+  INDEX `usfo_id_idx` (`from_id` ASC) VISIBLE,
+  CONSTRAINT `fil_id`
+    FOREIGN KEY (`file_id`)
+    REFERENCES `hr_system`.`user_files` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `usfo_id`
+    FOREIGN KEY (`from_id`)
+    REFERENCES `hr_system`.`user_pr` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `usto_id`
+    FOREIGN KEY (`to_id`)
+    REFERENCES `hr_system`.`user_pr` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`jobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`jobs` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `company_id` INT UNSIGNED NOT NULL,
+  `title` LONGTEXT NOT NULL,
+  `description` LONGTEXT NOT NULL,
+  `salary` LONGTEXT NOT NULL,
+  `extra_requirements` LONGTEXT NOT NULL,
+  `status` INT UNSIGNED NOT NULL DEFAULT '9',
+  PRIMARY KEY (`id`),
+  INDEX `cmp_id_idx` (`company_id` ASC) VISIBLE,
+  INDEX `act_id_idx` (`status` ASC) VISIBLE,
+  CONSTRAINT `act_id`
+    FOREIGN KEY (`status`)
+    REFERENCES `hr_system`.`actions` (`id`),
+  CONSTRAINT `cmp_id`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `hr_system`.`companies` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 36
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`job_candidate`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`job_candidate` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `job_id` INT NOT NULL,
+  `candidatecv_id` BIGINT UNSIGNED NOT NULL,
+  `status` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `can_id_idx` (`candidatecv_id` ASC) VISIBLE,
+  INDEX `job_id_idx` (`job_id` ASC) VISIBLE,
+  CONSTRAINT `can_id`
+    FOREIGN KEY (`candidatecv_id`)
+    REFERENCES `hr_system`.`candidatecv` (`id`),
+  CONSTRAINT `job_id`
+    FOREIGN KEY (`job_id`)
+    REFERENCES `hr_system`.`jobs` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 37
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`job_skill`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`job_skill` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `job_id` INT NOT NULL,
+  `skill_id` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `j_id_idx` (`job_id` ASC) VISIBLE,
+  INDEX `s_id_idx` (`skill_id` ASC) VISIBLE,
+  CONSTRAINT `j_id`
+    FOREIGN KEY (`job_id`)
+    REFERENCES `hr_system`.`jobs` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `s_id`
+    FOREIGN KEY (`skill_id`)
+    REFERENCES `hr_system`.`skills` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 26
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`messages`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`messages` (
+  `id` BIGINT UNSIGNED NOT NULL,
+  `from_id` BIGINT UNSIGNED NOT NULL,
+  `to_id` BIGINT UNSIGNED NOT NULL,
+  `message` LONGTEXT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `usu_id_idx` (`from_id` ASC) VISIBLE,
+  INDEX `fopo_id_idx` (`to_id` ASC) VISIBLE,
+  CONSTRAINT `fopo_id`
+    FOREIGN KEY (`to_id`)
+    REFERENCES `hr_system`.`user_pr` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `usu_id`
+    FOREIGN KEY (`from_id`)
+    REFERENCES `hr_system`.`user_pr` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`permissions`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`permissions` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(191) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `permissions_name_guard_name_unique` (`name` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 29
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+
+
+-- -----------------------------------------------------
+-- Table `hr_system`.`role_has_permission`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hr_system`.`role_has_permission` (
+  `permission_id` BIGINT UNSIGNED NOT NULL,
+  `user_id` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`permission_id`, `user_id`),
+  INDEX `u_id_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `p_id`
+    FOREIGN KEY (`permission_id`)
+    REFERENCES `hr_system`.`permissions` (`id`),
+  CONSTRAINT `u_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `hr_system`.`user_pr` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
